@@ -1,20 +1,20 @@
-'use strict';
+
 
 (function () {
-  describe('HomeController', function () {
-    // Initialize global variables
-    var scope,
-      HomeController;
+	describe('HomeController', () => {
+		// Initialize global variables
+		let scope,
+			HomeController;
 
-    // Load the main application module
-    beforeEach(module(ApplicationConfiguration.applicationModuleName));
+		// Load the main application module
+		beforeEach(module(ApplicationConfiguration.applicationModuleName));
 
-    beforeEach(inject(function ($controller, $rootScope) {
-      scope = $rootScope.$new();
+		beforeEach(inject(($controller, $rootScope) => {
+			scope = $rootScope.$new();
 
-      HomeController = $controller('HomeController as vm', {
-        $scope: scope
-      });
-    }));
-  });
+			HomeController = $controller('HomeController as vm', {
+				$scope: scope,
+			});
+		}));
+	});
 }());
