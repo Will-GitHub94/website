@@ -1,14 +1,14 @@
 
 
 // Set the Node ENV
-process.env.NODE_ENV = 'development';
+process.env.NODE_ENV = "development";
 
-let chalk = require('chalk'),
-	mongoose = require('../config/lib/mongoose');
+let chalk = require("chalk"),
+	mongoose = require("../config/lib/mongoose");
 
 mongoose.loadModels();
 
-let _indexToRemove = 'email_1',
+let _indexToRemove = "email_1",
 	errors = [],
 	processedCount = 0;
 
@@ -29,10 +29,10 @@ mongoose.connect((db) => {
 			errors.push(err);
 			message = `An error occured while removing the index "${_indexToRemove}".`;
 
-			if (err.message.indexOf('index not found with name') !== -1) {
+			if (err.message.indexOf("index not found with name") !== -1) {
 				message = `Index "${_indexToRemove}" could not be found.` +
-          '\r\nPlease double check the index name in your ' +
-          'mongodb User collection.';
+          "\r\nPlease double check the index name in your " +
+          "mongodb User collection.";
 			}
 
 			reportAndExit(message);
@@ -47,7 +47,7 @@ function reportAndExit(message) {
 		console.log(chalk.red(message));
 		console.log();
 
-		console.log(chalk.yellow('Errors:'));
+		console.log(chalk.yellow("Errors:"));
 		for (let i = 0; i < errors.length; i++) {
 			console.log(chalk.red(errors[i]));
 
@@ -57,8 +57,8 @@ function reportAndExit(message) {
 		}
 	} else {
 		console.log(chalk.green(message));
-		console.log(chalk.green(`${'The next time your application starts, ' +
-      'Mongoose will rebuild the index "'}${_indexToRemove}".`));
+		console.log(chalk.green(`${"The next time your application starts, " +
+      "Mongoose will rebuild the index ""}${_indexToRemove}".`));
 		process.exit(0);
 	}
 }

@@ -1,31 +1,31 @@
 
 
-let nodemailer = require('nodemailer'),
-	mongoose = require('mongoose'),
-	chalk = require('chalk'),
-	config = require('../config/config'),
-	mg = require('../config/lib/mongoose');
+let nodemailer = require("nodemailer"),
+	mongoose = require("mongoose"),
+	chalk = require("chalk"),
+	config = require("../config/config"),
+	mg = require("../config/lib/mongoose");
 
 const transporter = nodemailer.createTransport(config.mailer.options);
-const link = 'reset link here'; // PUT reset link here
+const link = "reset link here"; // PUT reset link here
 const email = {
 	from: config.mailer.from,
-	subject: 'Security update',
+	subject: "Security update",
 };
 const text = [
-	'Dear {{name}},',
-	'\n',
-	'We have updated our password storage systems to be more secure and more efficient, please click the link below to reset your password so you can login in the future.',
+	"Dear {{name}},",
+	"\n",
+	"We have updated our password storage systems to be more secure and more efficient, please click the link below to reset your password so you can login in the future.",
 	link,
-	'\n',
-	'Thanks,',
-	'The Team',
-].join('\n');
+	"\n",
+	"Thanks,",
+	"The Team",
+].join("\n");
 
 mg.loadModels();
 
 mg.connect((db) => {
-	const User = mongoose.model('User');
+	const User = mongoose.model("User");
 
 	User.find().exec((err, users) => {
 		if (err) {
@@ -46,7 +46,7 @@ mg.connect((db) => {
 
 		function sendEmail(user) {
 			email.to = user.email;
-			email.text = email.html = text.replace('{{name}}', user.displayName);
+			email.text = email.html = text.replace("{{name}}", user.displayName);
 
 			transporter.sendMail(email, emailCallback(user));
 		}
@@ -59,7 +59,7 @@ mg.connect((db) => {
 					errorCount++;
 
 					if (config.mailer.options.debug) {
-						console.log('Error: ', err);
+						console.log("Error: ", err);
 					}
 					console.error(`[${processedCount}/${users.length}] ${chalk.red(`Could not send email for ${user.displayName}`)}`);
 				} else {
@@ -79,7 +79,7 @@ mg.connect((db) => {
 			console.log();
 
 			if (processedCount === 0) {
-				console.log(chalk.yellow('No users were found.'));
+				console.log(chalk.yellow("No users were found."));
 			} else {
 				let alert;
 				if (!errorCount) {

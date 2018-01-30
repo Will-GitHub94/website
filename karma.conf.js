@@ -3,23 +3,23 @@
 /**
  * Module dependencies.
  */
-let _ = require('lodash'),
-	defaultAssets = require('./config/assets/default'),
-	testAssets = require('./config/assets/test'),
-	testConfig = require('./config/env/test'),
-	karmaReporters = ['mocha'];
+let _ = require("lodash"),
+	defaultAssets = require("./config/assets/default"),
+	testAssets = require("./config/assets/test"),
+	testConfig = require("./config/env/test"),
+	karmaReporters = ["mocha"];
 
 // Karma configuration
 module.exports = function (karmaConfig) {
 	const configuration = {
-		frameworks: ['jasmine'],
+		frameworks: ["jasmine"],
 
 		preprocessors: {
-			'modules/*/client/views/**/*.html': ['ng-html2js'],
+			"modules/*/client/views/**/*.html": ["ng-html2js"],
 		},
 
 		ngHtml2JsPreprocessor: {
-			moduleName: 'mean',
+			moduleName: "mean",
 
 			cacheIdFromPath(filepath) {
 				return filepath;
@@ -30,7 +30,7 @@ module.exports = function (karmaConfig) {
 		files: _.union(defaultAssets.client.lib.js, defaultAssets.client.lib.tests, defaultAssets.client.js, testAssets.tests.client, defaultAssets.client.views),
 
 		// Test results reporter to use
-		// Possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
+		// Possible values: "dots", "progress", "junit", "growl", "coverage"
 		reporters: karmaReporters,
 
 		// Web server port
@@ -54,11 +54,11 @@ module.exports = function (karmaConfig) {
 		// - Safari (only Mac)
 		// - PhantomJS
 		// - IE (only Windows)
-		browsers: ['Chrome'],
+		browsers: ["Chrome"],
 		customLaunchers: {
 			Chrome_travis_ci: {
-				base: 'Chrome',
-				flags: ['--no-sandbox'],
+				base: "Chrome",
+				flags: ["--no-sandbox"],
 			},
 		},
 
@@ -71,7 +71,7 @@ module.exports = function (karmaConfig) {
 	};
 
 	if (process.env.TRAVIS) {
-		configuration.browsers = ['Chrome_travis_ci'];
+		configuration.browsers = ["Chrome_travis_ci"];
 	}
 
 	karmaConfig.set(configuration);

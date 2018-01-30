@@ -1,9 +1,9 @@
 
 
-let _ = require('lodash'),
-	config = require('../config'),
-	mongoose = require('mongoose'),
-	chalk = require('chalk');
+let _ = require("lodash"),
+	config = require("../config"),
+	mongoose = require("mongoose"),
+	chalk = require("chalk");
 
 exports.start = start;
 
@@ -37,7 +37,7 @@ function start(seedConfig) {
 		function onSuccessComplete() {
 			if (options.logResults) {
 				console.log();
-				console.log(chalk.bold.green('Database Seeding: Mongo Seed complete!'));
+				console.log(chalk.bold.green("Database Seeding: Mongo Seed complete!"));
 				console.log();
 			}
 
@@ -47,7 +47,7 @@ function start(seedConfig) {
 		function onError(err) {
 			if (options.logResults) {
 				console.log();
-				console.log(chalk.bold.red('Database Seeding: Mongo Seed Failed!'));
+				console.log(chalk.bold.red("Database Seeding: Mongo Seed Failed!"));
 				console.log(chalk.bold.red(`Database Seeding: ${err}`));
 				console.log();
 			}
@@ -76,7 +76,7 @@ function seed(collection, options) {
 		}
 
 		// First check if we should skip this collection
-		// based on the collection's "skip.when" option.
+		// based on the collection"s "skip.when" option.
 		// NOTE: If it exists, "skip.when" should be a qualified
 		// Mongoose query that will be used with Model.find().
 		skipCollection()

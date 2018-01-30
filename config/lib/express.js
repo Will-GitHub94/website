@@ -3,23 +3,23 @@
 /**
  * Module dependencies.
  */
-let config = require('../config'),
-	express = require('express'),
-	morgan = require('morgan'),
-	logger = require('./logger'),
-	bodyParser = require('body-parser'),
-	session = require('express-session'),
-	MongoStore = require('connect-mongo')(session),
-	favicon = require('serve-favicon'),
-	compress = require('compression'),
-	methodOverride = require('method-override'),
-	cookieParser = require('cookie-parser'),
-	helmet = require('helmet'),
-	flash = require('connect-flash'),
-	hbs = require('express-hbs'),
-	path = require('path'),
-	_ = require('lodash'),
-	lusca = require('lusca');
+let config = require("../config"),
+	express = require("express"),
+	morgan = require("morgan"),
+	logger = require("./logger"),
+	bodyParser = require("body-parser"),
+	session = require("express-session"),
+	MongoStore = require("connect-mongo")(session),
+	favicon = require("serve-favicon"),
+	compress = require("compression"),
+	methodOverride = require("method-override"),
+	cookieParser = require("cookie-parser"),
+	helmet = require("helmet"),
+	flash = require("connect-flash"),
+	hbs = require("express-hbs"),
+	path = require("path"),
+	_ = require("lodash"),
+	lusca = require("lusca");
 
 /**
  * Initialize local variables
@@ -58,7 +58,7 @@ module.exports.initMiddleware = function (app) {
 	// Should be placed before express.static
 	app.use(compress({
 		filter(req, res) {
-			return (/json|text|javascript|css|font|svg/).test(res.getHeader('Content-Type'));
+			return (/json|text|javascript|css|font|svg/).test(res.getHeader("Content-Type"));
 		},
 		level: 9,
 	}));
@@ -67,16 +67,16 @@ module.exports.initMiddleware = function (app) {
 	app.use(favicon(app.locals.favicon));
 
 	// Enable logger (morgan) if enabled in the configuration file
-	if (_.has(config, 'log.format')) {
+	if (_.has(config, "log.format")) {
 		app.use(morgan(logger.getLogFormat(), logger.getMorganOptions()));
 	}
 
 	// Environment dependent middleware
-	if (process.env.NODE_ENV === 'development') {
+	if (process.env.NODE_ENV === "development") {
 		// Disable views cache
-		app.set('view cache', false);
-	} else if (process.env.NODE_ENV === 'production') {
-		app.locals.cache = 'memory';
+		app.set("view cache", false);
+	} else if (process.env.NODE_ENV === "production") {
+		app.locals.cache = "memory";
 	}
 
 	// Request body parsing middleware should be above methodOverride
@@ -95,11 +95,11 @@ module.exports.initMiddleware = function (app) {
  * Configure view engine
  */
 module.exports.initViewEngine = function (app) {
-	app.engine('server.view.html', hbs.express4({
-		extname: '.server.view.html',
+	app.engine("server.view.html", hbs.express4({
+		extname: ".server.view.html",
 	}));
-	app.set('view engine', 'server.view.html');
-	app.set('views', path.resolve('./'));
+	app.set("view engine", "server.view.html");
+	app.set("views", path.resolve("./"));
 };
 
 /**
@@ -152,7 +152,7 @@ module.exports.initHelmetHeaders = function (app) {
 		includeSubdomains: true,
 		force: true,
 	}));
-	app.disable('x-powered-by');
+	app.disable("x-powered-by");
 };
 
 /**
@@ -180,7 +180,7 @@ module.exports.initModulesServerRoutes = function (app) {
  */
 module.exports.initErrorRoutes = function (app) {
 	app.use((err, req, res, next) => {
-		// If the error object doesn't exists
+		// If the error object doesn"t exists
 		if (!err) {
 			return next();
 		}
@@ -189,7 +189,7 @@ module.exports.initErrorRoutes = function (app) {
 		console.error(err.stack);
 
 		// Redirect to error page
-		res.redirect('/server-error');
+		res.redirect("/server-error");
 	});
 };
 
@@ -198,7 +198,7 @@ module.exports.initErrorRoutes = function (app) {
  */
 module.exports.configureSocketIO = function (app, db) {
 	// Load the Socket.io configuration
-	const server = require('./socket.io')(app, db);
+	const server = require("./socket.io")(app, db);
 
 	// Return server object
 	return server;

@@ -3,11 +3,11 @@
 /**
  * Module dependencies.
  */
-let _ = require('lodash'),
-	config = require('../config'),
-	chalk = require('chalk'),
-	path = require('path'),
-	mongoose = require('mongoose');
+let _ = require("lodash"),
+	config = require("../config"),
+	chalk = require("chalk"),
+	path = require("path"),
+	mongoose = require("mongoose");
 
 // Load the mongoose models
 module.exports.loadModels = function (callback) {
@@ -29,13 +29,13 @@ module.exports.connect = function (callback) {
 		.connect(config.db.uri, options)
 		.then((connection) => {
 			// Enabling mongoose debug mode if required
-			mongoose.set('debug', config.db.debug);
+			mongoose.set("debug", config.db.debug);
 
 			// Call callback FN
 			if (callback) callback(connection.db);
 		})
 		.catch((err) => {
-			console.error(chalk.red('Could not connect to MongoDB!'));
+			console.error(chalk.red("Could not connect to MongoDB!"));
 			console.log(err);
 		});
 };
@@ -43,7 +43,7 @@ module.exports.connect = function (callback) {
 module.exports.disconnect = function (cb) {
 	mongoose.connection.db
 		.close((err) => {
-			console.info(chalk.yellow('Disconnected from MongoDB.'));
+			console.info(chalk.yellow("Disconnected from MongoDB."));
 			return cb(err);
 		});
 };

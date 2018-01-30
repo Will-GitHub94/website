@@ -14,13 +14,7 @@
 	"rules": {
 		"indent": [
 			"error",
-			"tab",
-			{
-				"SwitchCase": 1,
-				"MemberExpression": 1,
-				"ArrayExpression": 1,
-				"ObjectExpression": 1
-			}
+			"tab"
 		],
 		"linebreak-style": [
 			"error",
@@ -38,6 +32,10 @@
 		"no-eq-null": "warn",
 		"no-multi-spaces": "error",
 		"no-param-reassign": "warn",
-		"comma-dangle": ["error", "always"]
+		"comma-dangle": ["error", "always"],
+		"quotes": ["warn", "double"],
+		"no-tabs": 0,
+		"semi": ["error", "always"],
+		"space-before-function-paren": "warn"
 	}
 }

@@ -3,15 +3,15 @@
 /**
  * Module dependencies.
  */
-let config = require('../config'),
-	mongooseService = require('./mongoose'),
-	express = require('./express'),
-	chalk = require('chalk'),
-	seed = require('./mongo-seed');
+let config = require("../config"),
+	mongooseService = require("./mongoose"),
+	express = require("./express"),
+	chalk = require("chalk"),
+	seed = require("./mongo-seed");
 
 function seedDB() {
 	if (config.seedDB && config.seedDB.seed) {
-		console.log(chalk.bold.red('Warning:  Database seeding is turned on'));
+		console.log(chalk.bold.red("Warning:  Database seeding is turned on"));
 		seed.start();
 	}
 }
@@ -34,17 +34,17 @@ module.exports.start = function start(callback) {
 		// Start the app by listening on <port> at <host>
 		app.listen(config.port, config.host, () => {
 			// Create server URL
-			const server = `${(process.env.NODE_ENV === 'secure' ? 'https://' : 'http://') + config.host}:${config.port}`;
+			const server = `${(process.env.NODE_ENV === "secure" ? "https://" : "http://") + config.host}:${config.port}`;
 			// Logging initialization
-			console.log('--');
+			console.log("--");
 			console.log(chalk.green(config.app.title));
 			console.log();
 			console.log(chalk.green(`Environment:     ${process.env.NODE_ENV}`));
 			console.log(chalk.green(`Server:          ${server}`));
 			console.log(chalk.green(`Database:        ${config.db.uri}`));
 			console.log(chalk.green(`App version:     ${config.meanjs.version}`));
-			if (config.meanjs['meanjs-version']) { console.log(chalk.green(`MEAN.JS version: ${config.meanjs['meanjs-version']}`)); }
-			console.log('--');
+			if (config.meanjs["meanjs-version"]) { console.log(chalk.green(`MEAN.JS version: ${config.meanjs["meanjs-version"]}`)); }
+			console.log("--");
 
 			if (callback) callback(app, db, config);
 		});

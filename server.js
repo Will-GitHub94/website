@@ -1,8 +1,9 @@
-
-
 /**
  * Module dependencies.
  */
-const app = require('./config/lib/app');
+
+require("babel-register");
+
+const app = require("./config/lib/app");
 
 const server = app.start();

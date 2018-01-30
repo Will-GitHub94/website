@@ -3,18 +3,18 @@
 /**
  * Module dependencies.
  */
-let _ = require('lodash'),
-	chalk = require('chalk'),
-	glob = require('glob'),
-	fs = require('fs'),
-	path = require('path');
+let _ = require("lodash"),
+	chalk = require("chalk"),
+	glob = require("glob"),
+	fs = require("fs"),
+	path = require("path");
 
 /**
  * Get files by glob patterns
  */
 var getGlobbedPaths = function (globPatterns, excludes) {
 	// URL paths regex
-	const urlRegex = new RegExp('^(?:[a-z]+:)?\/\/', 'i');
+	const urlRegex = new RegExp("^(?:[a-z]+:)?\/\/", "i");
 
 	// The output array
 	let output = [];
@@ -60,9 +60,9 @@ const validateEnvironmentVariable = function () {
 		if (process.env.NODE_ENV) {
 			console.error(chalk.red(`+ Error: No configuration file found for "${process.env.NODE_ENV}" environment using development instead`));
 		} else {
-			console.error(chalk.red('+ Error: NODE_ENV is not defined! Using default development environment'));
+			console.error(chalk.red("+ Error: NODE_ENV is not defined! Using default development environment"));
 		}
-		process.env.NODE_ENV = 'development';
+		process.env.NODE_ENV = "development";
 	}
 	// Reset console color
 	console.log(chalk.white(''));
@@ -72,7 +72,7 @@ const validateEnvironmentVariable = function () {
  */
 const validateDomainIsSet = function (config) {
 	if (!config.domain) {
-		console.log(chalk.red('+ Important warning: config.domain is empty. It should be set to the fully qualified domain of the app.'));
+		console.log(chalk.red("+ Important warning: config.domain is empty. It should be set to the fully qualified domain of the app."));
 	}
 };
 
@@ -89,8 +89,8 @@ const validateSecureMode = function (config) {
 	const certificate = fs.existsSync(path.resolve(config.secure.certificate));
 
 	if (!privateKey || !certificate) {
-		console.log(chalk.red('+ Error: Certificate file or key file is missing, falling back to non-SSL mode'));
-		console.log(chalk.red('  To create them, simply run the following from your shell: sh ./scripts/generate-ssl-certs.sh'));
+		console.log(chalk.red("+ Error: Certificate file or key file is missing, falling back to non-SSL mode"));
+		console.log(chalk.red("  To create them, simply run the following from your shell: sh ./scripts/generate-ssl-certs.sh"));
 		console.log();
 		config.secure.ssl = false;
 	}
@@ -100,15 +100,15 @@ const validateSecureMode = function (config) {
  * Validate Session Secret parameter is not set to default in production
  */
 const validateSessionSecret = function (config, testing) {
-	if (process.env.NODE_ENV !== 'production') {
+	if (process.env.NODE_ENV !== "production") {
 		return true;
 	}
 
-	if (config.sessionSecret === 'MEAN') {
+	if (config.sessionSecret === "MEAN") {
 		if (!testing) {
-			console.log(chalk.red('+ WARNING: It is strongly recommended that you change sessionSecret config while running in production!'));
-			console.log(chalk.red('  Please add `sessionSecret: process.env.SESSION_SECRET || \'super amazing secret\'` to '));
-			console.log(chalk.red('  `config/env/production.js` or `config/env/local.js`'));
+			console.log(chalk.red("+ WARNING: It is strongly recommended that you change sessionSecret config while running in production!"));
+			console.log(chalk.red("  Please add `sessionSecret: process.env.SESSION_SECRET || \"super amazing secret\"` to "));
+			console.log(chalk.red("  `config/env/production.js` or `config/env/local.js`"));
 			console.log();
 		}
 		return false;
@@ -159,25 +159,25 @@ const initGlobalConfig = function () {
 	validateEnvironmentVariable();
 
 	// Get the default assets
-	const defaultAssets = require(path.join(process.cwd(), 'config/assets/default'));
+	const defaultAssets = require(path.join(process.cwd(), "config/assets/default"));
 
 	// Get the current assets
-	const environmentAssets = require(path.join(process.cwd(), 'config/assets/', process.env.NODE_ENV)) || {};
+	const environmentAssets = require(path.join(process.cwd(), "config/assets/", process.env.NODE_ENV)) || {};
 
 	// Merge assets
 	const assets = _.merge(defaultAssets, environmentAssets);
 
 	// Get the default config
-	const defaultConfig = require(path.join(process.cwd(), 'config/env/default'));
+	const defaultConfig = require(path.join(process.cwd(), "config/env/default"));
 
 	// Get the current config
-	const environmentConfig = require(path.join(process.cwd(), 'config/env/', process.env.NODE_ENV)) || {};
+	const environmentConfig = require(path.join(process.cwd(), "config/env/", process.env.NODE_ENV)) || {};
 
 	// Merge config files
 	let config = _.merge(defaultConfig, environmentConfig);
 
 	// read package.json for MEAN.JS project information
-	const pkg = require(path.resolve('./package.json'));
+	const pkg = require(path.resolve("./package.json"));
 	config.meanjs = pkg;
 
 	// Extend the config object with the local-NODE_ENV.js custom/local environment. This will override any settings present in the local configuration.
