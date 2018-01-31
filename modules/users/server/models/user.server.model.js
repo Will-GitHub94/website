@@ -1,17 +1,15 @@
-
-
 /**
  * Module dependencies
  */
-let mongoose = require('mongoose'),
-	path = require('path'),
-	config = require(path.resolve('./config/config')),
-	Schema = mongoose.Schema,
-	crypto = require('crypto'),
-	validator = require('validator'),
-	generatePassword = require('generate-password'),
-	owasp = require('owasp-password-strength-test'),
-	chalk = require('chalk');
+import mongoose from "mongoose";
+import validator from "validator";
+import generatePassword from "generate-password";
+import owasp from "owasp-password-strength-test";
+import chalk from "chalk";
+import crypto from "crypto";
+import config from "./../../../../config/config";
+
+const Schema = mongoose.Schema;
 
 owasp.config(config.shared.owasp);
 
@@ -19,15 +17,15 @@ owasp.config(config.shared.owasp);
 /**
  * A Validation function for local strategy properties
  */
-const validateLocalStrategyProperty = function (property) {
-	return ((this.provider !== 'local' && !this.updated) || property.length);
+const validateLocalStrategyProperty = (property) => {
+	return ((this.provider !== "local" && !this.updated) || property.length);
 };
 
 /**
  * A Validation function for local strategy email
  */
-const validateLocalStrategyEmail = function (email) {
-	return ((this.provider !== 'local' && !this.updated) || validator.isEmail(email, { require_tld: false }));
+const validateLocalStrategyEmail = (email) => {
+	return ((this.provider !== "local" && !this.updated) || validator.isEmail(email, { require_tld: false }));
 };
 
 /**
@@ -40,11 +38,11 @@ const validateLocalStrategyEmail = function (email) {
  * - not begin or end with "."
  */
 
-const validateUsername = function (username) {
+const validateUsername = (username) => {
 	const usernameRegex = /^(?=[\w.-]+$)(?!.*[._-]{2})(?!\.)(?!.*\.$).{3,34}$/;
 	return (
-		this.provider !== 'local' ||
-    (username && usernameRegex.test(username) && config.illegalUsernames.indexOf(username) < 0)
+		this.provider !== "local" ||
+		(username && usernameRegex.test(username) && config.illegalUsernames.indexOf(username) < 0)
 	);
 };
 
@@ -55,14 +53,20 @@ const UserSchema = new Schema({
 	firstName: {
 		type: String,
 		trim: true,
-		default: '',
-		validate: [validateLocalStrategyProperty, 'Please fill in your first name'],
+		default: "",
+		validate: [
+			validateLocalStrategyProperty,
+			"Please fill in your first name",
+		],
 	},
 	lastName: {
 		type: String,
 		trim: true,
-		default: '',
-		validate: [validateLocalStrategyProperty, 'Please fill in your last name'],
+		default: "",
+		validate: [
+			validateLocalStrategyProperty,
+			"Please fill in your last name",
+		],
 	},
 	displayName: {
 		type: String,
@@ -72,45 +76,59 @@ const UserSchema = new Schema({
 		type: String,
 		index: {
 			unique: true,
-			sparse: true, // For this to work on a previously indexed field, the index must be dropped & the application restarted.
+			sparse: true, // To work on previously indexed field, the index must be dropped & the application restarted.
 		},
 		lowercase: true,
 		trim: true,
-		default: '',
-		validate: [validateLocalStrategyEmail, 'Please fill a valid email address'],
+		default: "",
+		validate: [
+			validateLocalStrategyEmail,
+			"Please fill a valid email address",
+		],
 	},
 	username: {
 		type: String,
-		unique: 'Username already exists',
-		required: 'Please fill in a username',
-		validate: [validateUsername, 'Please enter a valid username: 3+ characters long, non restricted word, characters "_-.", no consecutive dots, does not begin or end with dots, letters a-z and numbers 0-9.'],
+		unique: "Username already exists",
+		required: "Please fill in a username",
+		validate: [
+			validateUsername,
+			"Please enter a valid username: 3+ characters long, non restricted word,"
+				+ " characters '_-.', no consecutive dots, does not begin or end with dots, letters a-z and"
+				+ " numbers 0-9.",
+		],
 		lowercase: true,
 		trim: true,
 	},
 	password: {
 		type: String,
-		default: '',
+		default: "",
 	},
 	salt: {
 		type: String,
 	},
 	profileImageURL: {
 		type: String,
-		default: '/modules/users/client/img/profile/default.png',
+		default: "/modules/users/client/img/profile/default.png",
 	},
 	provider: {
 		type: String,
-		required: 'Provider is required',
+		required: "Provider is required",
 	},
 	providerData: {},
 	additionalProvidersData: {},
 	roles: {
 		type: [{
 			type: String,
-			enum: ['user', 'admin'],
-		}],
-		default: ['user'],
-		required: 'Please provide at least one role',
+			enum: [
+				"user",
+				"admin",
+			],
+		},
+		],
+		default: [
+			"user",
+		],
+		required: "Please provide at least one role",
 	},
 	updated: {
 		type: Date,
@@ -131,9 +149,9 @@ const UserSchema = new Schema({
 /**
  * Hook a pre save method to hash the password
  */
-UserSchema.pre('save', function (next) {
-	if (this.password && this.isModified('password')) {
-		this.salt = crypto.randomBytes(16).toString('base64');
+UserSchema.pre("save", (next) => {
+	if (this.password && this.isModified("password")) {
+		this.salt = crypto.randomBytes(16).toString("base64");
 		this.password = this.hashPassword(this.password);
 	}
 
@@ -143,12 +161,12 @@ UserSchema.pre('save', function (next) {
 /**
  * Hook a pre validate method to test the local password
  */
-UserSchema.pre('validate', function (next) {
-	if (this.provider === 'local' && this.password && this.isModified('password')) {
+UserSchema.pre("validate", (next) => {
+	if (this.provider === "local" && this.password && this.isModified("password")) {
 		const result = owasp.test(this.password);
 		if (result.errors.length) {
-			const error = result.errors.join(' ');
-			this.invalidate('password', error);
+			const error = result.errors.join(" ");
+			this.invalidate("password", error);
 		}
 	}
 
@@ -158,9 +176,9 @@ UserSchema.pre('validate', function (next) {
 /**
  * Create instance method for hashing a password
  */
-UserSchema.methods.hashPassword = function (password) {
+UserSchema.methods.hashPassword = (password) => {
 	if (this.salt && password) {
-		return crypto.pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64, 'SHA1').toString('base64');
+		return crypto.pbkdf2Sync(password, new Buffer(this.salt, "base64"), 10000, 64, "SHA1").toString("base64");
 	}
 	return password;
 };
@@ -168,25 +186,25 @@ UserSchema.methods.hashPassword = function (password) {
 /**
  * Create instance method for authenticating user
  */
-UserSchema.methods.authenticate = function (password) {
+UserSchema.methods.authenticate = (password) => {
 	return this.password === this.hashPassword(password);
 };
 
 /**
  * Find possible not used username
  */
-UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
-	const _this = this;
-	const possibleUsername = username.toLowerCase() + (suffix || '');
+UserSchema.statics.findUniqueUsername = (username, suffix, callback) => {
+	const self = this;
+	const possibleUsername = username.toLowerCase() + (suffix || "");
 
-	_this.findOne({
+	self.findOne({
 		username: possibleUsername,
 	}, (err, user) => {
 		if (!err) {
 			if (!user) {
 				callback(possibleUsername);
 			} else {
-				return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
+				return self.findUniqueUsername(username, (suffix || 0) + 1, callback);
 			}
 		} else {
 			callback(null);
@@ -195,14 +213,14 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
 };
 
 /**
-* Generates a random passphrase that passes the owasp test
-* Returns a promise that resolves with the generated passphrase, or rejects with an error if something goes wrong.
-* NOTE: Passphrases are only tested against the required owasp strength tests, and not the optional tests.
-*/
-UserSchema.statics.generateRandomPassphrase = function () {
+ * Generates a random passphrase that passes the owasp test
+ * Returns a promise that resolves with the generated passphrase, or rejects with an error if something goes wrong.
+ * NOTE: Passphrases are only tested against the required owasp strength tests, and not the optional tests.
+ */
+UserSchema.statics.generateRandomPassphrase = () => {
 	return new Promise(((resolve, reject) => {
-		let password = '';
-		const repeatingCharacters = new RegExp('(.)\\1{2,}', 'g');
+		let password = "";
+		const repeatingCharacters = new RegExp("(.)\\1{2,}", "g");
 
 		// iterate until the we have a valid passphrase
 		// NOTE: Should rarely iterate more than once, but we need this to ensure no repeating characters are present
@@ -217,12 +235,12 @@ UserSchema.statics.generateRandomPassphrase = function () {
 			});
 
 			// check if we need to remove any repeating characters
-			password = password.replace(repeatingCharacters, '');
+			password = password.replace(repeatingCharacters, "");
 		}
 
 		// Send the rejection back if the passphrase fails to pass the strength test
 		if (owasp.test(password).errors.length) {
-			reject(new Error('An unexpected problem occured while generating the random passphrase'));
+			reject(new Error("An unexpected problem occured while generating the random passphrase"));
 		} else {
 			// resolve with the validated passphrase
 			resolve(password);
@@ -230,16 +248,76 @@ UserSchema.statics.generateRandomPassphrase = function () {
 	}));
 };
 
-UserSchema.statics.seed = seed;
-
-mongoose.model('User', UserSchema);
-
 /**
-* Seeds the User collection with document (User)
-* and provided options.
-*/
-function seed(doc, options) {
-	const User = mongoose.model('User');
+ * Seeds the User collection with document (User)
+ * and provided options.
+ */
+const seed = (doc, options) => {
+	const User = mongoose.model("User");
+
+	const skipDocument = () => {
+		return new Promise(((resolve, reject) => {
+			User.findOne({
+				username: doc.username,
+			})
+				.exec((errExec, existing) => {
+					if (errExec) {
+						return reject(errExec);
+					}
+
+					if (!existing) {
+						return resolve(false);
+					}
+
+					if (existing && !options.overwrite) {
+						return resolve(true);
+					}
+
+					// Remove User (overwrite)
+
+					existing.remove((errRemove) => {
+						if (errRemove) {
+							return reject(errRemove);
+						}
+
+						return resolve(false);
+					});
+				});
+		}));
+	};
+
+	const add = (skip) => {
+		return new Promise(((resolve, reject) => {
+			if (skip) {
+				return resolve({
+					message: chalk.yellow(`Database Seeding: User\t\t${doc.username} skipped`),
+				});
+			}
+
+			User.generateRandomPassphrase()
+				.then((passphrase) => {
+					const user = new User(doc);
+
+					user.provider = "local";
+					user.displayName = `${user.firstName} ${user.lastName}`;
+					user.password = passphrase;
+
+					user.save((err) => {
+						if (err) {
+							return reject(err);
+						}
+
+						return resolve({
+							message: `Database Seeding: User\t\t${user.username} added with password`
+										+ ` set to ${passphrase}`,
+						});
+					});
+				})
+				.catch((err) => {
+					return reject(err);
+				});
+		}));
+	};
 
 	return new Promise(((resolve, reject) => {
 		skipDocument()
@@ -250,69 +328,9 @@ function seed(doc, options) {
 			.catch((err) => {
 				return reject(err);
 			});
-
-		function skipDocument() {
-			return new Promise(((resolve, reject) => {
-				User
-					.findOne({
-						username: doc.username,
-					})
-					.exec((err, existing) => {
-						if (err) {
-							return reject(err);
-						}
-
-						if (!existing) {
-							return resolve(false);
-						}
-
-						if (existing && !options.overwrite) {
-							return resolve(true);
-						}
-
-						// Remove User (overwrite)
-
-						existing.remove((err) => {
-							if (err) {
-								return reject(err);
-							}
-
-							return resolve(false);
-						});
-					});
-			}));
-		}
-
-		function add(skip) {
-			return new Promise(((resolve, reject) => {
-				if (skip) {
-					return resolve({
-						message: chalk.yellow(`Database Seeding: User\t\t${doc.username} skipped`),
-					});
-				}
-
-				User.generateRandomPassphrase()
-					.then((passphrase) => {
-						const user = new User(doc);
-
-						user.provider = 'local';
-						user.displayName = `${user.firstName} ${user.lastName}`;
-						user.password = passphrase;
-
-						user.save((err) => {
-							if (err) {
-								return reject(err);
-							}
-
-							return resolve({
-								message: `Database Seeding: User\t\t${user.username} added with password set to ${passphrase}`,
-							});
-						});
-					})
-					.catch((err) => {
-						return reject(err);
-					});
-			}));
-		}
 	}));
-}
+};
+
+UserSchema.statics.seed = seed;
+
+mongoose.model("User", UserSchema);

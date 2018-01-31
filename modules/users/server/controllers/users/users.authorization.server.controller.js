@@ -3,25 +3,25 @@
 /**
  * Module dependencies
  */
-let _ = require('lodash'),
-	mongoose = require('mongoose'),
-	User = mongoose.model('User');
+import mongoose from "mongoose";
+
+const User = mongoose.model("User");
 
 /**
  * User middleware
  */
-exports.userByID = function (req, res, next, id) {
+const userByID = (req, res, next, id) => {
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(400).send({
-			message: 'User is invalid',
+			message: "User is invalid",
 		});
 	}
 
 	User.findOne({
 		_id: id,
-	}).exec((err, user) => {
-		if (err) {
-			return next(err);
+	}).exec((errFindOne, user) => {
+		if (errFindOne) {
+			return next(errFindOne);
 		} else if (!user) {
 			return next(new Error(`Failed to load User ${id}`));
 		}
@@ -30,3 +30,5 @@ exports.userByID = function (req, res, next, id) {
 		next();
 	});
 };
+
+export default userByID;

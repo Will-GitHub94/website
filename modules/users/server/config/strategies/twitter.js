@@ -3,9 +3,9 @@
 /**
  * Module dependencies
  */
-let passport = require('passport'),
-	TwitterStrategy = require('passport-twitter').Strategy,
-	users = require('../../controllers/users.server.controller');
+let passport = require("passport"),
+	TwitterStrategy = require("passport-twitter").Strategy,
+	users = require("../../controllers/users.server.controller");
 
 module.exports = function (config) {
 	// Use twitter strategy
@@ -24,7 +24,7 @@ module.exports = function (config) {
 
 			// Create the user OAuth profile
 			var displayName = profile.displayName.trim();
-			var iSpace = displayName.indexOf(' '); // index of the whitespace following the firstName
+			var iSpace = displayName.indexOf(" "); // index of the whitespace following the firstName
 			var firstName = iSpace !== -1 ? displayName.substring(0, iSpace) : displayName;
 			var lastName = iSpace !== -1 ? displayName.substring(iSpace + 1) : '';
 
@@ -33,9 +33,9 @@ module.exports = function (config) {
 				lastName: lastName,
 				displayName: displayName,
 				username: profile.username,
-				profileImageURL: profile.photos[0].value.replace('normal', 'bigger'),
-				provider: 'twitter',
-				providerIdentifierField: 'id_str',
+				profileImageURL: profile.photos[0].value.replace("normal", "bigger"),
+				provider: "twitter",
+				providerIdentifierField: "id_str",
 				providerData: providerData,
 			};
 

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	tests: {
 		server: [
 			"modules/*/tests/server/**/*.js",

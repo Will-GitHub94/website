@@ -1,25 +1,24 @@
-
-
 /**
  * Module dependencies
  */
-let adminPolicy = require('../policies/admin.server.policy'),
-	admin = require('../controllers/admin.server.controller');
+import adminPolicy from "../policies/admin.server.policy";
+import admin from "../controllers/admin.server.controller";
+import userRoutes from "./users.server.routes";
 
-module.exports = function (app) {
+export default (app) => {
 	// User route registration first. Ref: #713
-	require('./users.server.routes.js')(app);
+	userRoutes(app);
 
 	// Users collection routes
-	app.route('/api/users')
+	app.route("/api/users")
 		.get(adminPolicy.isAllowed, admin.list);
 
 	// Single user routes
-	app.route('/api/users/:userId')
+	app.route("/api/users/:userId")
 		.get(adminPolicy.isAllowed, admin.read)
 		.put(adminPolicy.isAllowed, admin.update)
-		.delete(adminPolicy.isAllowed, admin.delete);
+		.delete(adminPolicy.isAllowed, admin.remove);
 
 	// Finish by binding the user middleware
-	app.param('userId', admin.userByID);
+	app.param("userId", admin.userByID);
 };

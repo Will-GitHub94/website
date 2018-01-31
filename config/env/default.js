@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	app: {
 		title: "MEAN.JS",
 		description: "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js",
@@ -71,5 +71,4 @@ module.exports = {
 			minOptionalTestsToPass: 4,
 		},
 	},
-
 };

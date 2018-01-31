@@ -3,44 +3,44 @@
 /**
  * Module dependencies
  */
-let path = require('path'),
-	errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-	mongoose = require('mongoose'),
-	passport = require('passport'),
-	User = mongoose.model('User');
+import mongoose from "mongoose";
+import passport from "passport";
+import errorHandler from "../../../../core/server/controllers/errors.server.controller";
 
-// URLs for which user can't be redirected on signin
+const User = mongoose.model("User");
+
+// URLs for which user can"t be redirected on signin
 const noReturnUrls = [
-	'/authentication/signin',
-	'/authentication/signup',
+	"/authentication/signin",
+	"/authentication/signup",
 ];
 
 /**
  * Signup
  */
-exports.signup = function (req, res) {
+const signup = (req, res) => {
 	// For security measurement we remove the roles from the req.body object
 	delete req.body.roles;
 
 	// Init user and add missing fields
 	const user = new User(req.body);
-	user.provider = 'local';
+	user.provider = "local";
 	user.displayName = `${user.firstName} ${user.lastName}`;
 
 	// Then save the user
-	user.save((err) => {
-		if (err) {
+	user.save((errSave) => {
+		if (errSave) {
 			return res.status(422).send({
-				message: errorHandler.getErrorMessage(err),
+				message: errorHandler.getErrorMessage(errSave),
 			});
 		}
 		// Remove sensitive data before login
 		user.password = undefined;
 		user.salt = undefined;
 
-		req.login(user, (err) => {
-			if (err) {
-				res.status(400).send(err);
+		req.login(user, (errLogin) => {
+			if (errLogin) {
+				res.status(400).send(errLogin);
 			} else {
 				res.json(user);
 			}
@@ -51,18 +51,18 @@ exports.signup = function (req, res) {
 /**
  * Signin after passport authentication
  */
-exports.signin = function (req, res, next) {
-	passport.authenticate('local', (err, user, info) => {
-		if (err || !user) {
+const signin = (req, res, next) => {
+	passport.authenticate("local", (errAuth, user, info) => {
+		if (errAuth || !user) {
 			res.status(422).send(info);
 		} else {
 			// Remove sensitive data before login
 			user.password = undefined;
 			user.salt = undefined;
 
-			req.login(user, (err) => {
-				if (err) {
-					res.status(400).send(err);
+			req.login(user, (errLogin) => {
+				if (errLogin) {
+					res.status(400).send(errLogin);
 				} else {
 					res.json(user);
 				}
@@ -74,15 +74,15 @@ exports.signin = function (req, res, next) {
 /**
  * Signout
  */
-exports.signout = function (req, res) {
+const signout = (req, res) => {
 	req.logout();
-	res.redirect('/');
+	res.redirect("/");
 };
 
 /**
  * OAuth provider call
  */
-exports.oauthCall = function (req, res, next) {
+const oauthCall = (req, res, next) => {
 	const strategy = req.params.strategy;
 	// Authenticate
 	passport.authenticate(strategy)(req, res, next);
@@ -91,23 +91,24 @@ exports.oauthCall = function (req, res, next) {
 /**
  * OAuth callback
  */
-exports.oauthCallback = function (req, res, next) {
+const oauthCallback = (req, res, next) => {
 	const strategy = req.params.strategy;
 
 	// info.redirect_to contains inteded redirect path
-	passport.authenticate(strategy, (err, user, info) => {
-		if (err) {
-			return res.redirect(`/authentication/signin?err=${encodeURIComponent(errorHandler.getErrorMessage(err))}`);
+	passport.authenticate(strategy, (errAuth, user, info) => {
+		if (errAuth) {
+			return res.redirect(`/authentication/signin?err=${encodeURIComponent(errorHandler.
+				getErrorMessage(errAuth))}`);
 		}
 		if (!user) {
-			return res.redirect('/authentication/signin');
+			return res.redirect("/authentication/signin");
 		}
-		req.login(user, (err) => {
-			if (err) {
-				return res.redirect('/authentication/signin');
+		req.login(user, (errLogin) => {
+			if (errLogin) {
+				return res.redirect("/authentication/signin");
 			}
 
-			return res.redirect(info.redirect_to || '/');
+			return res.redirect(info.redirect_to || "/");
 		});
 	})(req, res, next);
 };
@@ -115,7 +116,7 @@ exports.oauthCallback = function (req, res, next) {
 /**
  * Helper function to save or update a OAuth user profile
  */
-exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
+const saveOAuthUserProfile = (req, providerUserProfile, done) => {
 	// Setup info and user objects
 	const info = {};
 	let user;
@@ -128,16 +129,19 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
 
 	// Define a search query fields
 	const searchMainProviderIdentifierField = `providerData.${providerUserProfile.providerIdentifierField}`;
-	const searchAdditionalProviderIdentifierField = `additionalProvidersData.${providerUserProfile.provider}.${providerUserProfile.providerIdentifierField}`;
+	const searchAdditionalProviderIdentifierField = `additionalProvidersData.${providerUserProfile.provider}
+														.${providerUserProfile.providerIdentifierField}`;
 
 	// Define main provider search query
 	const mainProviderSearchQuery = {};
 	mainProviderSearchQuery.provider = providerUserProfile.provider;
-	mainProviderSearchQuery[searchMainProviderIdentifierField] = providerUserProfile.providerData[providerUserProfile.providerIdentifierField];
+	mainProviderSearchQuery[searchMainProviderIdentifierField] =
+		providerUserProfile.providerData[providerUserProfile.providerIdentifierField];
 
 	// Define additional provider search query
 	const additionalProviderSearchQuery = {};
-	additionalProviderSearchQuery[searchAdditionalProviderIdentifierField] = providerUserProfile.providerData[providerUserProfile.providerIdentifierField];
+	additionalProviderSearchQuery[searchAdditionalProviderIdentifierField] =
+		providerUserProfile.providerData[providerUserProfile.providerIdentifierField];
 
 	// Define a search query to find existing user with current provider profile
 	const searchQuery = {
@@ -145,14 +149,15 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
 	};
 
 	// Find existing user with this provider account
-	User.findOne(searchQuery, (err, existingUser) => {
-		if (err) {
-			return done(err);
+	User.findOne(searchQuery, (errFindOne, existingUser) => {
+		if (errFindOne) {
+			return done(errFindOne);
 		}
 
 		if (!req.user) {
 			if (!existingUser) {
-				const possibleUsername = providerUserProfile.username || ((providerUserProfile.email) ? providerUserProfile.email.split('@')[0] : '');
+				const possibleUsername = providerUserProfile.username || ((providerUserProfile.email) ?
+					providerUserProfile.email.split("@")[0] : "");
 
 				User.findUniqueUsername(possibleUsername, null, (availableUsername) => {
 					user = new User({
@@ -171,12 +176,12 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
 					user.email = providerUserProfile.email;
 
 					// And save the user
-					user.save((err) => {
-						return done(err, user, info);
+					user.save((errSave) => {
+						return done(errSave, user, info);
 					});
 				});
 			} else {
-				return done(err, existingUser, info);
+				return done(errFindOne, existingUser, info);
 			}
 		} else {
 			// User is already logged in, join the provider data to the existing user
@@ -185,10 +190,10 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
 			// Check if an existing user was found for this provider account
 			if (existingUser) {
 				if (user.id !== existingUser.id) {
-					return done(new Error('Account is already connected to another user'), user, info);
+					return done(new Error("Account is already connected to another user"), user, info);
 				}
 
-				return done(new Error('User is already connected using this provider'), user, info);
+				return done(new Error("User is already connected using this provider"), user, info);
 			}
 
 			// Add the provider data to the additional provider data field
@@ -198,12 +203,12 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
 
 			user.additionalProvidersData[providerUserProfile.provider] = providerUserProfile.providerData;
 
-			// Then tell mongoose that we've updated the additionalProvidersData field
-			user.markModified('additionalProvidersData');
+			// Then tell mongoose that we"ve updated the additionalProvidersData field
+			user.markModified("additionalProvidersData");
 
 			// And save the user
-			user.save((err) => {
-				return done(err, user, info);
+			user.save((errSave) => {
+				return done(errSave, user, info);
 			});
 		}
 	});
@@ -212,13 +217,13 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
 /**
  * Remove OAuth provider
  */
-exports.removeOAuthProvider = function (req, res, next) {
+const removeOAuthProvider = (req, res, next) => {
 	const user = req.user;
 	const provider = req.query.provider;
 
 	if (!user) {
 		return res.status(401).json({
-			message: 'User is not authenticated',
+			message: "User is not authenticated",
 		});
 	} else if (!provider) {
 		return res.status(400).send();
@@ -228,21 +233,31 @@ exports.removeOAuthProvider = function (req, res, next) {
 	if (user.additionalProvidersData[provider]) {
 		delete user.additionalProvidersData[provider];
 
-		// Then tell mongoose that we've updated the additionalProvidersData field
-		user.markModified('additionalProvidersData');
+		// Then tell mongoose that we"ve updated the additionalProvidersData field
+		user.markModified("additionalProvidersData");
 	}
 
-	user.save((err) => {
-		if (err) {
+	user.save((errSave) => {
+		if (errSave) {
 			return res.status(422).send({
-				message: errorHandler.getErrorMessage(err),
+				message: errorHandler.getErrorMessage(errSave),
 			});
 		}
-		req.login(user, (err) => {
-			if (err) {
-				return res.status(400).send(err);
+		req.login(user, (errLogin) => {
+			if (errLogin) {
+				return res.status(400).send(errLogin);
 			}
 			return res.json(user);
 		});
 	});
+};
+
+export default {
+	signup,
+	signin,
+	signout,
+	oauthCall,
+	oauthCallback,
+	saveOAuthUserProfile,
+	removeOAuthProvider
 };

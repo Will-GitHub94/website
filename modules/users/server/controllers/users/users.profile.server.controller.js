@@ -3,22 +3,22 @@
 /**
  * Module dependencies
  */
-let _ = require('lodash'),
-	fs = require('fs'),
-	path = require('path'),
-	errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-	mongoose = require('mongoose'),
-	multer = require('multer'),
-	multerS3 = require('multer-s3'),
-	aws = require('aws-sdk'),
-	amazonS3URI = require('amazon-s3-uri'),
-	config = require(path.resolve('./config/config')),
-	User = mongoose.model('User'),
-	validator = require('validator');
+let _ = require("lodash"),
+	fs = require("fs"),
+	path = require("path"),
+	errorHandler = require(path.resolve("./modules/core/server/controllers/errors.server.controller")),
+	mongoose = require("mongoose"),
+	multer = require("multer"),
+	multerS3 = require("multer-s3"),
+	aws = require("aws-sdk"),
+	amazonS3URI = require("amazon-s3-uri"),
+	config = require(path.resolve("./config/config")),
+	User = mongoose.model("User"),
+	validator = require("validator");
 
-const whitelistedFields = ['firstName', 'lastName', 'email', 'username'];
+const whitelistedFields = ["firstName", "lastName", "email", "username"];
 
-const useS3Storage = config.uploads.storage === 's3' && config.aws.s3;
+const useS3Storage = config.uploads.storage === "s3" && config.aws.s3;
 let s3;
 
 if (useS3Storage) {
@@ -60,7 +60,7 @@ exports.update = function (req, res) {
 		});
 	} else {
 		res.status(401).send({
-			message: 'User is not signed in',
+			message: "User is not signed in",
 		});
 	}
 };
@@ -79,7 +79,7 @@ exports.changeProfilePicture = function (req, res) {
 			storage: multerS3({
 				s3,
 				bucket: config.aws.s3.bucket,
-				acl: 'public-read',
+				acl: "public-read",
 			}),
 		};
 	} else {
@@ -87,9 +87,9 @@ exports.changeProfilePicture = function (req, res) {
 	}
 
 	// Filtering to upload only images
-	multerConfig.fileFilter = require(path.resolve('./config/lib/multer')).imageFileFilter;
+	multerConfig.fileFilter = require(path.resolve("./config/lib/multer")).imageFileFilter;
 
-	const upload = multer(multerConfig).single('newProfilePicture');
+	const upload = multer(multerConfig).single("newProfilePicture");
 
 	if (user) {
 		existingImageUrl = user.profileImageURL;
@@ -105,7 +105,7 @@ exports.changeProfilePicture = function (req, res) {
 			});
 	} else {
 		res.status(401).send({
-			message: 'User is not signed in',
+			message: "User is not signed in",
 		});
 	}
 
@@ -123,7 +123,7 @@ exports.changeProfilePicture = function (req, res) {
 
 	function updateUser() {
 		return new Promise(((resolve, reject) => {
-			user.profileImageURL = config.uploads.storage === 's3' && config.aws.s3 ?
+			user.profileImageURL = config.uploads.storage === "s3" && config.aws.s3 ?
 				req.file.location :
 				`/${req.file.path}`;
 			user.save((err, theuser) => {
@@ -138,7 +138,7 @@ exports.changeProfilePicture = function (req, res) {
 
 	function deleteOldImage() {
 		return new Promise(((resolve, reject) => {
-			if (existingImageUrl !== User.schema.path('profileImageURL').defaultValue) {
+			if (existingImageUrl !== User.schema.path("profileImageURL").defaultValue) {
 				if (useS3Storage) {
 					try {
 						const { region, bucket, key } = amazonS3URI(existingImageUrl);
@@ -149,7 +149,7 @@ exports.changeProfilePicture = function (req, res) {
 
 						s3.deleteObject(params, (err) => {
 							if (err) {
-								console.log('Error occurred while deleting old profile picture.');
+								console.log("Error occurred while deleting old profile picture.");
 								console.log(`Check if you have sufficient permissions : ${err}`);
 							}
 
@@ -163,16 +163,16 @@ exports.changeProfilePicture = function (req, res) {
 				} else {
 					fs.unlink(path.resolve(`.${existingImageUrl}`), (unlinkError) => {
 						if (unlinkError) {
-							// If file didn't exist, no need to reject promise
-							if (unlinkError.code === 'ENOENT') {
-								console.log('Removing profile image failed because file did not exist.');
+							// If file didn"t exist, no need to reject promise
+							if (unlinkError.code === "ENOENT") {
+								console.log("Removing profile image failed because file did not exist.");
 								return resolve();
 							}
 
 							console.error(unlinkError);
 
 							reject({
-								message: 'Error occurred while deleting old profile picture',
+								message: "Error occurred while deleting old profile picture",
 							});
 						} else {
 							resolve();

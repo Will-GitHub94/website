@@ -1,8 +1,4 @@
-
-
-const fs = require("fs");
-
-module.exports = {
+export default {
 	secure: {
 		ssl: true,
 		privateKey: "./config/sslcerts/key.pem",
@@ -13,7 +9,8 @@ module.exports = {
 	// Binding to 127.0.0.1 is safer in production.
 	host: process.env.HOST || "0.0.0.0",
 	db: {
-		uri: process.env.MONGOHQ_URL || process.env.MONGODB_URI || `mongodb://${process.env.DB_1_PORT_27017_TCP_ADDR || "localhost"}/mean`,
+		uri: process.env.MONGOHQ_URL || process.env.MONGODB_URI ||
+				`mongodb://${process.env.DB_1_PORT_27017_TCP_ADDR || "localhost"}/mean`,
 		options: {
 			/**
       * Uncomment to enable ssl certificate based authentication to mongodb
@@ -101,7 +98,10 @@ module.exports = {
 					email: "admin@localhost.com",
 					firstName: "Admin",
 					lastName: "Local",
-					roles: ["admin", "user"],
+					roles: [
+						"admin",
+						"user",
+					],
 				},
 			}],
 		}],

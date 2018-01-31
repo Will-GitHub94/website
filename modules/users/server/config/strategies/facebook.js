@@ -3,9 +3,9 @@
 /**
  * Module dependencies
  */
-let passport = require('passport'),
-	FacebookStrategy = require('passport-facebook').Strategy,
-	users = require('../../controllers/users.server.controller');
+let passport = require("passport"),
+	FacebookStrategy = require("passport-facebook").Strategy,
+	users = require("../../controllers/users.server.controller");
 
 module.exports = function (config) {
 	// Use facebook strategy
@@ -14,9 +14,9 @@ module.exports = function (config) {
 			clientID: config.facebook.clientID,
 			clientSecret: config.facebook.clientSecret,
 			callbackURL: config.facebook.callbackURL,
-			profileFields: ['id', 'name', 'displayName', 'emails', 'photos'],
+			profileFields: ["id", "name", "displayName", "emails", "photos"],
 			passReqToCallback: true,
-			scope: ['email'],
+			scope: ["email"],
 		},
 		function (req, accessToken, refreshToken, profile, done) {
 		// Set the provider data and include tokens
@@ -32,8 +32,8 @@ module.exports = function (config) {
 				email: profile.emails ? profile.emails[0].value : undefined,
 				username: profile.username || generateUsername(profile),
 				profileImageURL: (profile.id) ? `//graph.facebook.com/${profile.id }/picture?type=large` : undefined,
-				provider: 'facebook',
-				providerIdentifierField: 'id',
+				provider: "facebook",
+				providerIdentifierField: "id",
 				providerData: providerData,
 			};
 
@@ -44,7 +44,7 @@ module.exports = function (config) {
 				var username = '';
 
 				if (profile.emails) {
-					username = profile.emails[0].value.split('@')[0];
+					username = profile.emails[0].value.split("@")[0];
 				} else if (profile.name) {
 					username = profile.name.givenName[0] + profile.name.familyName;
 				}

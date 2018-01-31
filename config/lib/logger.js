@@ -1,13 +1,18 @@
+import { clone, has, includes } from "lodash";
+import chalk from "chalk";
+import fs from "fs";
+import winston from "winston";
 
-
-let _ = require("lodash"),
-	config = require("../config"),
-	chalk = require("chalk"),
-	fs = require("fs"),
-	winston = require("winston");
+import config from "../config";
 
 // list of valid formats for the logging
-const validFormats = ["combined", "common", "dev", "short", "tiny"];
+const validFormats = [
+	"combined",
+	"common",
+	"dev",
+	"short",
+	"tiny",
+];
 
 // Instantiating the default winston application logger with the Console
 // transport
@@ -38,7 +43,7 @@ logger.stream = {
  * Instantiate a winston"s File transport for disk file logging
  *
  */
-logger.setupFileLogger = function setupFileLogger() {
+logger.setupFileLogger = () => {
 	const fileLoggerTransport = this.getLogOptions();
 	if (!fileLoggerTransport) {
 		return false;
@@ -69,11 +74,11 @@ logger.setupFileLogger = function setupFileLogger() {
  *
  * Returns a Winston object for logging with the File transport
  */
-logger.getLogOptions = function getLogOptions() {
-	const _config = _.clone(config, true);
-	const configFileLogger = _config.log.fileLogger;
+logger.getLogOptions = () => {
+	const conf = clone(config, true);
+	const configFileLogger = conf.log.fileLogger;
 
-	if (!_.has(_config, "log.fileLogger.directoryPath") || !_.has(_config, "log.fileLogger.fileName")) {
+	if (!has(conf, "log.fileLogger.directoryPath") || !has(conf, "log.fileLogger.fileName")) {
 		console.log("unable to find logging file configuration");
 		return false;
 	}
@@ -87,7 +92,7 @@ logger.getLogOptions = function getLogOptions() {
 		timestamp: true,
 		maxsize: configFileLogger.maxsize ? configFileLogger.maxsize : 10485760,
 		maxFiles: configFileLogger.maxFiles ? configFileLogger.maxFiles : 2,
-		json: (_.has(configFileLogger, "json")) ? configFileLogger.json : false,
+		json: (has(configFileLogger, "json")) ? configFileLogger.json : false,
 		eol: "\n",
 		tailable: true,
 		showLevel: true,
@@ -102,7 +107,7 @@ logger.getLogOptions = function getLogOptions() {
  * Returns a log.options object with a writable stream based on winston
  * file logging transport (if available)
  */
-logger.getMorganOptions = function getMorganOptions() {
+logger.getMorganOptions = () => {
 	return {
 		stream: logger.stream,
 	};
@@ -113,20 +118,20 @@ logger.getMorganOptions = function getMorganOptions() {
  *
  * Returns the log.format option set in the current environment configuration
  */
-logger.getLogFormat = function getLogFormat() {
+logger.getLogFormat = () => {
 	let format = config.log && config.log.format ? config.log.format.toString() : "combined";
 
 	// make sure we have a valid format
-	if (!_.includes(validFormats, format)) {
+	if (!includes(validFormats, format)) {
 		format = "combined";
 
 		if (process.env.NODE_ENV !== "test") {
 			console.log();
-			console.log(chalk.yellow(`Warning: An invalid format was provided. The logger will use the default format of "${format}"`));
+			console.log(chalk.yellow("Warning: An invalid format was provided. The logger will use the default"
+										+ `format of "${format}"`));
 			console.log();
 		}
 	}
-
 	return format;
 };
 

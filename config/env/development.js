@@ -1,10 +1,9 @@
+import defaultEnvConfig from "./default";
 
-
-const defaultEnvConfig = require("./default");
-
-module.exports = {
+export default {
 	db: {
-		uri: process.env.MONGOHQ_URL || process.env.MONGODB_URI || `mongodb://${process.env.DB_1_PORT_27017_TCP_ADDR || "localhost"}/mean-dev`,
+		uri: process.env.MONGOHQ_URL || process.env.MONGODB_URI ||
+				`mongodb://${process.env.DB_1_PORT_27017_TCP_ADDR || "localhost"}/mean-dev`,
 		options: {},
 		// Enable mongoose debug mode
 		debug: process.env.MONGODB_DEBUG || false,
@@ -22,7 +21,7 @@ module.exports = {
 		},
 	},
 	app: {
-		title: `${defaultEnvConfig.app.title} - Development Environment`,
+		title: `${defaultEnvConfig.default.app.title} - Development Environment`,
 	},
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || "APP_ID",
@@ -83,7 +82,10 @@ module.exports = {
 					email: "admin@localhost.com",
 					firstName: "Admin",
 					lastName: "Local",
-					roles: ["admin", "user"],
+					roles: [
+						"admin",
+						"user",
+					],
 				},
 			}, {
 				// Set to true to overwrite this document
@@ -96,7 +98,9 @@ module.exports = {
 					email: "user@localhost.com",
 					firstName: "User",
 					lastName: "Local",
-					roles: ["user"],
+					roles: [
+						"user",
+					],
 				},
 			}],
 		}, {

@@ -1,7 +1,7 @@
-module.exports = {
+export default {
 	server: {
 		gulpConfig: [
-			"gulpfile.js",
+			"gulpfile.babel.js",
 		],
 		allJS: [
 			"server.js",
@@ -21,5 +21,5 @@ module.exports = {
 		views: [
 			"modules/*/server/views/*.html",
 		],
-	}
+	},
 };

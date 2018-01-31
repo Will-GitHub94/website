@@ -1,13 +1,10 @@
-
-
-let validator = require('validator'),
-	path = require('path'),
-	config = require(path.resolve('./config/config'));
+import validator from "validator";
+import config from "../../../../config/config";
 
 /**
  * Render the main application page
  */
-exports.renderIndex = function (req, res) {
+const renderIndex = (req, res) => {
 	let safeUserObject = null;
 	if (req.user) {
 		safeUserObject = {
@@ -24,7 +21,7 @@ exports.renderIndex = function (req, res) {
 		};
 	}
 
-	res.render('modules/core/server/views/index', {
+	res.render("modules/core/server/views/index", {
 		user: JSON.stringify(safeUserObject),
 		sharedConfig: JSON.stringify(config.shared),
 	});
@@ -33,9 +30,9 @@ exports.renderIndex = function (req, res) {
 /**
  * Render the server error page
  */
-exports.renderServerError = function (req, res) {
-	res.status(500).render('modules/core/server/views/500', {
-		error: 'Oops! Something went wrong...',
+const renderServerError = (req, res) => {
+	res.status(500).render("modules/core/server/views/500", {
+		error: "Oops! Something went wrong...",
 	});
 };
 
@@ -43,20 +40,26 @@ exports.renderServerError = function (req, res) {
  * Render the server not found responses
  * Performs content-negotiation on the Accept HTTP header
  */
-exports.renderNotFound = function (req, res) {
+const renderNotFound = (req, res) => {
 	res.status(404).format({
-		'text/html': function () {
-			res.render('modules/core/server/views/404', {
+		"text/html": () => {
+			res.render("modules/core/server/views/404", {
 				url: req.originalUrl,
 			});
 		},
-		'application/json': function () {
+		"application/json": () => {
 			res.json({
-				error: 'Path not found',
+				error: "Path not found",
 			});
 		},
 		default() {
-			res.send('Path not found');
+			res.send("Path not found");
 		},
 	});
+};
+
+export default {
+	renderIndex,
+	renderServerError,
+	renderNotFound
 };

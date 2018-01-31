@@ -3,14 +3,14 @@
 /**
  * Module dependencies
  */
-let path = require('path'),
-	config = require(path.resolve('./config/config')),
-	errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-	mongoose = require('mongoose'),
-	User = mongoose.model('User'),
-	nodemailer = require('nodemailer'),
-	async = require('async'),
-	crypto = require('crypto');
+let path = require("path"),
+	config = require(path.resolve("./config/config")),
+	errorHandler = require(path.resolve("./modules/core/server/controllers/errors.server.controller")),
+	mongoose = require("mongoose"),
+	User = mongoose.model("User"),
+	nodemailer = require("nodemailer"),
+	async = require("async"),
+	crypto = require("crypto");
 
 const smtpTransport = nodemailer.createTransport(config.mailer.options);
 
@@ -22,7 +22,7 @@ exports.forgot = function (req, res, next) {
 		// Generate random token
 		function (done) {
 			crypto.randomBytes(20, (err, buffer) => {
-				const token = buffer.toString('hex');
+				const token = buffer.toString("hex");
 				done(err, token);
 			});
 		},
@@ -36,12 +36,12 @@ exports.forgot = function (req, res, next) {
 						{ username: usernameOrEmail },
 						{ email: usernameOrEmail },
 					],
-				}, '-salt -password', (err, user) => {
+				}, "-salt -password", (err, user) => {
 					if (err || !user) {
 						return res.status(400).send({
-							message: 'No account with that username or email has been found',
+							message: "No account with that username or email has been found",
 						});
-					} else if (user.provider !== 'local') {
+					} else if (user.provider !== "local") {
 						return res.status(400).send({
 							message: `It seems like you signed up using your ${user.provider} account, please sign in using that provider.`,
 						});
@@ -55,17 +55,17 @@ exports.forgot = function (req, res, next) {
 				});
 			} else {
 				return res.status(422).send({
-					message: 'Username/email field must not be blank',
+					message: "Username/email field must not be blank",
 				});
 			}
 		},
 		function (token, user, done) {
-			let httpTransport = 'http://';
+			let httpTransport = "http://";
 			if (config.secure && config.secure.ssl === true) {
-				httpTransport = 'https://';
+				httpTransport = "https://";
 			}
 			const baseUrl = config.domain || httpTransport + req.headers.host;
-			res.render(path.resolve('modules/users/server/templates/reset-password-email'), {
+			res.render(path.resolve("modules/users/server/templates/reset-password-email"), {
 				name: user.displayName,
 				appName: config.app.title,
 				url: `${baseUrl}/api/auth/reset/${token}`,
@@ -78,17 +78,17 @@ exports.forgot = function (req, res, next) {
 			const mailOptions = {
 				to: user.email,
 				from: config.mailer.from,
-				subject: 'Password Reset',
+				subject: "Password Reset",
 				html: emailHTML,
 			};
 			smtpTransport.sendMail(mailOptions, (err) => {
 				if (!err) {
 					res.send({
-						message: 'An email has been sent to the provided email with further instructions.',
+						message: "An email has been sent to the provided email with further instructions.",
 					});
 				} else {
 					return res.status(400).send({
-						message: 'Failure sending email',
+						message: "Failure sending email",
 					});
 				}
 
@@ -113,7 +113,7 @@ exports.validateResetToken = function (req, res) {
 		},
 	}, (err, user) => {
 		if (err || !user) {
-			return res.redirect('/password/reset/invalid');
+			return res.redirect("/password/reset/invalid");
 		}
 
 		res.redirect(`/password/reset/${req.params.token}`);
@@ -164,18 +164,18 @@ exports.reset = function (req, res, next) {
 						});
 					} else {
 						return res.status(422).send({
-							message: 'Passwords do not match',
+							message: "Passwords do not match",
 						});
 					}
 				} else {
 					return res.status(400).send({
-						message: 'Password reset token is invalid or has expired.',
+						message: "Password reset token is invalid or has expired.",
 					});
 				}
 			});
 		},
 		function (user, done) {
-			res.render('modules/users/server/templates/reset-password-confirm-email', {
+			res.render("modules/users/server/templates/reset-password-confirm-email", {
 				name: user.displayName,
 				appName: config.app.title,
 			}, (err, emailHTML) => {
@@ -187,12 +187,12 @@ exports.reset = function (req, res, next) {
 			const mailOptions = {
 				to: user.email,
 				from: config.mailer.from,
-				subject: 'Your password has been changed',
+				subject: "Your password has been changed",
 				html: emailHTML,
 			};
 
 			smtpTransport.sendMail(mailOptions, (err) => {
-				done(err, 'done');
+				done(err, "done");
 			});
 		},
 	], (err) => {
@@ -228,35 +228,35 @@ exports.changePassword = function (req, res, next) {
 										res.status(400).send(err);
 									} else {
 										res.send({
-											message: 'Password changed successfully',
+											message: "Password changed successfully",
 										});
 									}
 								});
 							});
 						} else {
 							res.status(422).send({
-								message: 'Passwords do not match',
+								message: "Passwords do not match",
 							});
 						}
 					} else {
 						res.status(422).send({
-							message: 'Current password is incorrect',
+							message: "Current password is incorrect",
 						});
 					}
 				} else {
 					res.status(400).send({
-						message: 'User is not found',
+						message: "User is not found",
 					});
 				}
 			});
 		} else {
 			res.status(422).send({
-				message: 'Please provide a new password',
+				message: "Please provide a new password",
 			});
 		}
 	} else {
 		res.status(401).send({
-			message: 'User is not signed in',
+			message: "User is not signed in",
 		});
 	}
 };

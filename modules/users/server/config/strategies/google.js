@@ -3,9 +3,9 @@
 /**
  * Module dependencies
  */
-let passport = require('passport'),
-	GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
-	users = require('../../controllers/users.server.controller');
+let passport = require("passport"),
+	GoogleStrategy = require("passport-google-oauth").OAuth2Strategy,
+	users = require("../../controllers/users.server.controller");
 
 module.exports = function (config) {
 	// Use google strategy
@@ -15,8 +15,8 @@ module.exports = function (config) {
 			clientSecret: config.google.clientSecret,
 			callbackURL: config.google.callbackURL,
 			passReqToCallback: true,
-			scope: ['https://www.googleapis.com/auth/userinfo.profile',
-				'https://www.googleapis.com/auth/userinfo.email',
+			scope: ["https://www.googleapis.com/auth/userinfo.profile",
+				"https://www.googleapis.com/auth/userinfo.email",
 			],
 		},
 		function (req, accessToken, refreshToken, profile, done) {
@@ -33,8 +33,8 @@ module.exports = function (config) {
 				email: profile.emails[0].value,
 				username: profile.username,
 				profileImageURL: (providerData.picture) ? providerData.picture : undefined,
-				provider: 'google',
-				providerIdentifierField: 'id',
+				provider: "google",
+				providerIdentifierField: "id",
 				providerData: providerData,
 			};
 

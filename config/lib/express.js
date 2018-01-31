@@ -1,30 +1,31 @@
-
-
 /**
  * Module dependencies.
  */
-let config = require("../config"),
-	express = require("express"),
-	morgan = require("morgan"),
-	logger = require("./logger"),
-	bodyParser = require("body-parser"),
-	session = require("express-session"),
-	MongoStore = require("connect-mongo")(session),
-	favicon = require("serve-favicon"),
-	compress = require("compression"),
-	methodOverride = require("method-override"),
-	cookieParser = require("cookie-parser"),
-	helmet = require("helmet"),
-	flash = require("connect-flash"),
-	hbs = require("express-hbs"),
-	path = require("path"),
-	_ = require("lodash"),
-	lusca = require("lusca");
+import * as bodyParser from "body-parser";
+import * as session from "express-session";
+import * as connectMongo from "connect-mongo";
+import * as favicon from "serve-favicon";
+import * as compress from "compression";
+import * as methodOverride from "method-override";
+import * as cookieParser from "cookie-parser";
+import * as helmet from "helmet";
+import * as flash from "connect-flash";
+import * as hbs from "express-hbs";
+import * as path from "path";
+import { has } from "lodash";
+import * as lusca from "lusca";
+import * as express from "express";
+import morgan from "morgan";
+
+import config from "../config";
+import logger from "./logger";
+
+const MongoStore = connectMongo(session);
 
 /**
  * Initialize local variables
  */
-module.exports.initLocalVariables = function (app) {
+const initLocalVariables = (app) => {
 	// Setting application local variables
 	app.locals.title = config.app.title;
 	app.locals.description = config.app.description;
@@ -54,7 +55,7 @@ module.exports.initLocalVariables = function (app) {
 /**
  * Initialize application middleware
  */
-module.exports.initMiddleware = function (app) {
+const initMiddleware = (app) => {
 	// Should be placed before express.static
 	app.use(compress({
 		filter(req, res) {
@@ -67,7 +68,7 @@ module.exports.initMiddleware = function (app) {
 	app.use(favicon(app.locals.favicon));
 
 	// Enable logger (morgan) if enabled in the configuration file
-	if (_.has(config, "log.format")) {
+	if (has(config, "log.format")) {
 		app.use(morgan(logger.getLogFormat(), logger.getMorganOptions()));
 	}
 
@@ -94,7 +95,7 @@ module.exports.initMiddleware = function (app) {
 /**
  * Configure view engine
  */
-module.exports.initViewEngine = function (app) {
+const initViewEngine = (app) => {
 	app.engine("server.view.html", hbs.express4({
 		extname: ".server.view.html",
 	}));
@@ -105,7 +106,7 @@ module.exports.initViewEngine = function (app) {
 /**
  * Configure Express session
  */
-module.exports.initSession = function (app, db) {
+const initSession = (app, db) => {
 	// Express MongoDB session storage
 	app.use(session({
 		saveUninitialized: true,
@@ -130,7 +131,7 @@ module.exports.initSession = function (app, db) {
 /**
  * Invoke modules server configuration
  */
-module.exports.initModulesConfiguration = function (app) {
+const initModulesConfiguration = (app) => {
 	config.files.server.configs.forEach((configPath) => {
 		require(path.resolve(configPath))(app);
 	});
@@ -139,7 +140,7 @@ module.exports.initModulesConfiguration = function (app) {
 /**
  * Configure Helmet headers configuration for security
  */
-module.exports.initHelmetHeaders = function (app) {
+const initHelmetHeaders = (app) => {
 	// six months expiration period specified in seconds
 	const SIX_MONTHS = 15778476;
 
@@ -158,7 +159,7 @@ module.exports.initHelmetHeaders = function (app) {
 /**
  * Configure the modules ACL policies
  */
-module.exports.initModulesServerPolicies = function (app) {
+const initModulesServerPolicies = () => {
 	// Globbing policy files
 	config.files.server.policies.forEach((policyPath) => {
 		require(path.resolve(policyPath)).invokeRolesPolicies();
@@ -168,7 +169,7 @@ module.exports.initModulesServerPolicies = function (app) {
 /**
  * Configure the modules server routes
  */
-module.exports.initModulesServerRoutes = function (app) {
+const initModulesServerRoutes = (app) => {
 	// Globbing routing files
 	config.files.server.routes.forEach((routePath) => {
 		require(path.resolve(routePath))(app);
@@ -178,7 +179,7 @@ module.exports.initModulesServerRoutes = function (app) {
 /**
  * Configure error handling
  */
-module.exports.initErrorRoutes = function (app) {
+const initErrorRoutes = (app) => {
 	app.use((err, req, res, next) => {
 		// If the error object doesn"t exists
 		if (!err) {
@@ -196,7 +197,7 @@ module.exports.initErrorRoutes = function (app) {
 /**
  * Configure Socket.io
  */
-module.exports.configureSocketIO = function (app, db) {
+const configureSocketIO = (app, db) => {
 	// Load the Socket.io configuration
 	const server = require("./socket.io")(app, db);
 
@@ -207,39 +208,41 @@ module.exports.configureSocketIO = function (app, db) {
 /**
  * Initialize the Express application
  */
-module.exports.init = function (db) {
+const init = (db) => {
 	// Initialize express app
 	let app = express();
 
 	// Initialize local variables
-	this.initLocalVariables(app);
+	initLocalVariables(app);
 
 	// Initialize Express middleware
-	this.initMiddleware(app);
+	initMiddleware(app);
 
 	// Initialize Express view engine
-	this.initViewEngine(app);
+	initViewEngine(app);
 
 	// Initialize Helmet security headers
-	this.initHelmetHeaders(app);
+	initHelmetHeaders(app);
 
 	// Initialize Express session
-	this.initSession(app, db);
+	initSession(app, db);
 
 	// Initialize Modules configuration
-	this.initModulesConfiguration(app);
+	initModulesConfiguration(app);
 
 	// Initialize modules server authorization policies
-	this.initModulesServerPolicies(app);
+	initModulesServerPolicies();
 
 	// Initialize modules server routes
-	this.initModulesServerRoutes(app);
+	initModulesServerRoutes(app);
 
 	// Initialize error routes
-	this.initErrorRoutes(app);
+	initErrorRoutes(app);
 
 	// Configure Socket.io
-	app = this.configureSocketIO(app, db);
+	app = configureSocketIO(app, db);
 
 	return app;
 };
+
+export default init;

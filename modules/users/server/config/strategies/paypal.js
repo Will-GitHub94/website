@@ -3,9 +3,9 @@
 /**
  * Module dependencies
  */
-let passport = require('passport'),
-	PayPalStrategy = require('passport-paypal-openidconnect').Strategy,
-	users = require('../../controllers/users.server.controller');
+let passport = require("passport"),
+	PayPalStrategy = require("passport-paypal-openidconnect").Strategy,
+	users = require("../../controllers/users.server.controller");
 
 module.exports = function (config) {
 	passport.use(new PayPalStrategy(
@@ -13,7 +13,7 @@ module.exports = function (config) {
 			clientID: config.paypal.clientID,
 			clientSecret: config.paypal.clientSecret,
 			callbackURL: config.paypal.callbackURL,
-			scope: 'openid profile email',
+			scope: "openid profile email",
 			sandbox: config.paypal.sandbox,
 			passReqToCallback: true,
 
@@ -31,8 +31,8 @@ module.exports = function (config) {
 				displayName: profile.displayName,
 				email: profile._json.email,
 				username: profile.username,
-				provider: 'paypal',
-				providerIdentifierField: 'user_id',
+				provider: "paypal",
+				providerIdentifierField: "user_id",
 				providerData: providerData,
 			};
 

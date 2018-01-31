@@ -3,22 +3,21 @@
 /**
  * Module dependencies
  */
-let path = require('path'),
-	mongoose = require('mongoose'),
-	User = mongoose.model('User'),
-	errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+import mongoose from "mongoose";
+import errorHandler from "../../../core/server/controllers/errors.server.controller";
 
+const User = mongoose.model("User");
 /**
  * Show the current user
  */
-exports.read = function (req, res) {
+const read = (req, res) => {
 	res.json(req.model);
 };
 
 /**
  * Update a User
  */
-exports.update = function (req, res) {
+const update = (req, res) => {
 	const user = req.model;
 
 	// For security purposes only merge these parameters
@@ -41,7 +40,7 @@ exports.update = function (req, res) {
 /**
  * Delete a user
  */
-exports.delete = function (req, res) {
+const remove = (req, res) => {
 	const user = req.model;
 
 	user.remove((err) => {
@@ -58,29 +57,30 @@ exports.delete = function (req, res) {
 /**
  * List of Users
  */
-exports.list = function (req, res) {
-	User.find({}, '-salt -password -providerData').sort('-created').populate('user', 'displayName').exec((err, users) => {
-		if (err) {
-			return res.status(422).send({
-				message: errorHandler.getErrorMessage(err),
-			});
-		}
+const list = (req, res) => {
+	User.find({}, "-salt -password -providerData").sort("-created").populate("user", "displayName")
+		.exec((err, users) => {
+			if (err) {
+				return res.status(422).send({
+					message: errorHandler.getErrorMessage(err),
+				});
+			}
 
-		res.json(users);
-	});
+			res.json(users);
+		});
 };
 
 /**
  * User middleware
  */
-exports.userByID = function (req, res, next, id) {
+const userByID = (req, res, next, id) => {
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(400).send({
-			message: 'User is invalid',
+			message: "User is invalid",
 		});
 	}
 
-	User.findById(id, '-salt -password -providerData').exec((err, user) => {
+	User.findById(id, "-salt -password -providerData").exec((err, user) => {
 		if (err) {
 			return next(err);
 		} else if (!user) {
@@ -90,4 +90,12 @@ exports.userByID = function (req, res, next, id) {
 		req.model = user;
 		next();
 	});
+};
+
+export default {
+	read,
+	update,
+	remove,
+	list,
+	userByID
 };

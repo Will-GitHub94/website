@@ -1,0 +1,9 @@
+{
+	"esversion": 6,
+	"maxparams": 4,
+	"shadow": false,
+	"strict": false,
+	"mocha": true,
+	"node": true,
+	"laxbreak": true
+}

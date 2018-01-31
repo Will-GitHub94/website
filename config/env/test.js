@@ -1,10 +1,9 @@
-
-
 const defaultEnvConfig = require("./default");
 
-module.exports = {
+export default {
 	db: {
-		uri: process.env.MONGOHQ_URL || process.env.MONGODB_URI || `mongodb://${process.env.DB_1_PORT_27017_TCP_ADDR || "localhost"}/mean-test`,
+		uri: process.env.MONGOHQ_URL || process.env.MONGODB_URI ||
+				`mongodb://${process.env.DB_1_PORT_27017_TCP_ADDR || "localhost"}/mean-test`,
 		options: {},
 		// Enable mongoose debug mode
 		debug: process.env.MONGODB_DEBUG || false,
@@ -23,7 +22,7 @@ module.exports = {
 	},
 	port: process.env.PORT || 3001,
 	app: {
-		title: `${defaultEnvConfig.app.title} - Test Environment`,
+		title: `${defaultEnvConfig.default.app.title} - Test Environment`,
 	},
 	uploads: {
 		profile: {
@@ -105,8 +104,7 @@ module.exports = {
 						"user",
 					],
 				},
-			},
-			],
+			}],
 		}, {
 			model: "Article",
 			docs: [{
@@ -115,9 +113,7 @@ module.exports = {
 					title: "Test Article",
 					content: "Code coverage test article!",
 				},
-			},
-			],
-		},
-		],
+			}],
+		}],
 	},
 };
