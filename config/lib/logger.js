@@ -46,7 +46,7 @@ logger.stream = {
  */
 logger.getLogOptions = () => {
 	const conf = clone(config.initGlobalConfig(), true);
-	const configFileLogger = conf.default.log.fileLogger;
+	const configFileLogger = conf.log.fileLogger;
 
 	if (!has(conf, "log.fileLogger.directoryPath") || !has(conf, "log.fileLogger.fileName")) {
 		console.log("unable to find logging file configuration");

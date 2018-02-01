@@ -2,9 +2,9 @@
  * Module dependencies.
  */
 import { merge } from "lodash";
-import * as chalk from "chalk";
-import * as path from "path";
-import * as mongoose from "mongoose";
+import chalk from "chalk";
+import path from "path";
+import mongoose from "mongoose";
 
 import config from "../config";
 
@@ -15,20 +15,23 @@ const loadModels = (callback) => {
 		require(path.resolve(modelPath));
 	});
 
-	if (callback) callback();
+	if (callback) {
+		callback();
+	}
 };
 
 // Initialize Mongoose
 const connect = (callback) => {
-	mongoose.Promise = config.db.promise;
+	const conf = config.initGlobalConfig();
+	mongoose.Promise = conf.db.promise;
 
-	const options = merge(config.db.options || {}, { useMongoClient: true });
+	const options = merge(conf.db.options || {});
 
 	mongoose
-		.connect(config.db.uri, options)
+		.connect(conf.db.uri, options)
 		.then((connection) => {
 			// Enabling mongoose debug mode if required
-			mongoose.set("debug", config.db.debug);
+			mongoose.set("debug", conf.db.debug);
 
 			// Call callback FN
 			if (callback) callback(connection.db);

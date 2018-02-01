@@ -51,7 +51,7 @@ gulp.task("nodemon", () => {
 	const debugArgument = semver.satisfies(process.versions.node, ">=7.0.0") ? "--inspect" : "--debug";
 
 	return plugins.nodemon({
-		script: "server.js",
+		script: "index.js",
 		nodeArgs: [debugArgument],
 		ext: "js,html",
 		verbose: true,
@@ -66,7 +66,7 @@ gulp.task("nodemon", () => {
 // Nodemon task without verbosity or debugging
 gulp.task("nodemon-nodebug", () => {
 	return plugins.nodemon({
-		script: "server.js",
+		script: "index.js",
 		ext: "js,html",
 		watch: union(
 			defaultAssets.server.views,
