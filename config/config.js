@@ -7,6 +7,15 @@ import glob from "glob";
 import fs from "fs";
 import path from "path";
 
+import defaultAssets from "./assets/default";
+import devAssets from "./assets/development";
+import prodAssets from "./assets/production";
+import defaultConfig from "./env/default";
+import devConfig from "./env/development";
+import prodConfig from "./env/production";
+import localDevConfig from "./env/local-development";
+import pkg from "../package";
+
 /**
  * Get files by glob patterns
  */
@@ -139,53 +148,46 @@ const initGlobalConfigFiles = (config, assets) => {
 	};
 
 	// Setting Globbed model files
-	config.files.server.models = getGlobbedPaths(assets.server.models);
+	config.files.server.models = getGlobbedPaths(assets.default.server.models);
 
 	// Setting Globbed route files
-	config.files.server.routes = getGlobbedPaths(assets.server.routes);
+	config.files.server.routes = getGlobbedPaths(assets.default.server.routes);
 
 	// Setting Globbed config files
-	config.files.server.configs = getGlobbedPaths(assets.server.config);
+	config.files.server.configs = getGlobbedPaths(assets.default.server.config);
 
 	// Setting Globbed socket files
-	config.files.server.sockets = getGlobbedPaths(assets.server.sockets);
+	config.files.server.sockets = getGlobbedPaths(assets.default.server.sockets);
 
 	// Setting Globbed policies files
-	config.files.server.policies = getGlobbedPaths(assets.server.policies);
+	config.files.server.policies = getGlobbedPaths(assets.default.server.policies);
 };
 
 /**
  * Initialize global configuration
  */
-export default () => {
+const initGlobalConfig = () => {
 	// Validate NODE_ENV existence
 	validateEnvironmentVariable();
 
-	// Get the default assets
-	const defaultAssets = require(path.join(process.cwd(), "config/assets/default"));
+	let assets;
+	let config;
 
-	// Get the current assets
-	const environmentAssets = require(path.join(process.cwd(), "config/assets/", process.env.NODE_ENV)) || {};
-
-	// Merge assets
-	const assets = merge(defaultAssets, environmentAssets);
-
-	// Get the default config
-	const defaultConfig = require(path.join(process.cwd(), "config/env/default"));
-
-	// Get the current config
-	const environmentConfig = require(path.join(process.cwd(), "config/env/", process.env.NODE_ENV)) || {};
-
-	// Merge config files
-	let config = merge(defaultConfig, environmentConfig);
+	if (process.env.NODE_ENV === "development") {
+		assets = merge(defaultAssets, (devAssets || {}));
+		config = merge(defaultConfig, (devConfig || {}));
+	} else {
+		assets = merge(defaultAssets, (prodAssets || {}));
+		config = merge(defaultConfig, (prodConfig || {}));
+	}
 
 	// read package.json for MEAN.JS project information
-	config.meanjs = require(path.resolve("./package.json"));
+	config.meanjs = pkg;
 
 	// Extend the config object with the local-NODE_ENV.js custom/local environment. This will override any settings
 	// present in the local configuration.
 	config = merge(config, (fs.existsSync(path.join(process.cwd(), `config/env/local-${process.env.NODE_ENV}.js`))
-		&& require(path.join(process.cwd(), `config/env/local-${process.env.NODE_ENV}.js`))) || {});
+		&& (localDevConfig || {})));
 
 	// Initialize global globbed files
 	initGlobalConfigFiles(config, assets);
@@ -209,4 +211,8 @@ export default () => {
 	};
 
 	return config;
+};
+
+export default {
+	initGlobalConfig
 };

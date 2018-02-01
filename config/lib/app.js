@@ -55,4 +55,7 @@ const start = (callback) => {
 	});
 };
 
-export default start;
+export default {
+	start,
+	init
+};

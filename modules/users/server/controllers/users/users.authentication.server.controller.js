@@ -97,8 +97,8 @@ const oauthCallback = (req, res, next) => {
 	// info.redirect_to contains inteded redirect path
 	passport.authenticate(strategy, (errAuth, user, info) => {
 		if (errAuth) {
-			return res.redirect(`/authentication/signin?err=${encodeURIComponent(errorHandler.
-				getErrorMessage(errAuth))}`);
+			return res.redirect(`/authentication/signin?err=${encodeURIComponent(errorHandler
+				.getErrorMessage(errAuth))}`);
 		}
 		if (!user) {
 			return res.redirect("/authentication/signin");

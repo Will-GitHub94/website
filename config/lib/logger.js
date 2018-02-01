@@ -40,43 +40,13 @@ logger.stream = {
 };
 
 /**
- * Instantiate a winston"s File transport for disk file logging
- *
- */
-logger.setupFileLogger = () => {
-	const fileLoggerTransport = this.getLogOptions();
-	if (!fileLoggerTransport) {
-		return false;
-	}
-
-	try {
-		// Check first if the configured path is writable and only then
-		// instantiate the file logging transport
-		if (fs.openSync(fileLoggerTransport.filename, "a+")) {
-			logger.add(winston.transports.File, fileLoggerTransport);
-		}
-
-		return true;
-	} catch (err) {
-		if (process.env.NODE_ENV !== "test") {
-			console.log();
-			console.log(chalk.red("An error has occured during the creation of the File transport logger."));
-			console.log(chalk.red(err));
-			console.log();
-		}
-
-		return false;
-	}
-};
-
-/**
  * The options to use with winston logger
  *
  * Returns a Winston object for logging with the File transport
  */
 logger.getLogOptions = () => {
-	const conf = clone(config, true);
-	const configFileLogger = conf.log.fileLogger;
+	const conf = clone(config.initGlobalConfig(), true);
+	const configFileLogger = conf.default.log.fileLogger;
 
 	if (!has(conf, "log.fileLogger.directoryPath") || !has(conf, "log.fileLogger.fileName")) {
 		console.log("unable to find logging file configuration");
@@ -99,6 +69,36 @@ logger.getLogOptions = () => {
 		handleExceptions: true,
 		humanReadableUnhandledException: true,
 	};
+};
+
+/**
+ * Instantiate a winston"s File transport for disk file logging
+ *
+ */
+logger.setupFileLogger = () => {
+	const fileLoggerTransport = logger.getLogOptions();
+	if (!fileLoggerTransport) {
+		return false;
+	}
+
+	try {
+		// Check first if the configured path is writable and only then
+		// instantiate the file logging transport
+		if (fs.openSync(fileLoggerTransport.filename, "a+")) {
+			logger.add(winston.transports.File, fileLoggerTransport);
+		}
+
+		return true;
+	} catch (err) {
+		if (process.env.NODE_ENV !== "test") {
+			console.log();
+			console.log(chalk.red("An error has occured during the creation of the File transport logger."));
+			console.log(chalk.red(err));
+			console.log();
+		}
+
+		return false;
+	}
 };
 
 /**

@@ -6,6 +6,7 @@ import { forEach, union } from "lodash";
 import fs from "fs";
 import glob from "glob";
 import gulp from "gulp";
+import eslint from "gulp-eslint";
 import gulpLoadPlugins from "gulp-load-plugins";
 import runSequence from "run-sequence";
 import pngquant from "imagemin-pngquant";
@@ -135,8 +136,8 @@ gulp.task("eslint", () => {
 	);
 
 	return gulp.src(assets)
-		.pipe(plugins.eslint())
-		.pipe(plugins.eslint.format());
+		.pipe(eslint())
+		.pipe(eslint.format());
 });
 
 // wiredep task to default

@@ -1,20 +1,20 @@
 /**
  * Module dependencies.
  */
-import * as bodyParser from "body-parser";
-import * as session from "express-session";
-import * as connectMongo from "connect-mongo";
-import * as favicon from "serve-favicon";
-import * as compress from "compression";
-import * as methodOverride from "method-override";
-import * as cookieParser from "cookie-parser";
-import * as helmet from "helmet";
-import * as flash from "connect-flash";
-import * as hbs from "express-hbs";
-import * as path from "path";
+import bodyParser from "body-parser";
+import session from "express-session";
+import connectMongo from "connect-mongo";
+import favicon from "serve-favicon";
+import compress from "compression";
+import methodOverride from "method-override";
+import cookieParser from "cookie-parser";
+import helmet from "helmet";
+import flash from "connect-flash";
+import hbs from "express-hbs";
+import path from "path";
 import { has } from "lodash";
-import * as lusca from "lusca";
-import * as express from "express";
+import lusca from "lusca";
+import express from "express";
 import morgan from "morgan";
 
 import config from "../config";

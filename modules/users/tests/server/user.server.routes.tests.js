@@ -348,7 +348,7 @@ describe("User CRUD tests", () => {
 			should.not.exist(err);
 			agent.post("/api/auth/forgot")
 				.send({
-					usernameOrEmail: '',
+					usernameOrEmail: "",
 				})
 				.expect(422)
 				.end((err, res) => {
@@ -631,8 +631,8 @@ describe("User CRUD tests", () => {
 				// Change password
 				agent.post("/api/users/password")
 					.send({
-						newPassword: '',
-						verifyPassword: '',
+						newPassword: "",
+						verifyPassword: "",
 						currentPassword: credentials.password,
 					})
 					.expect(422)
