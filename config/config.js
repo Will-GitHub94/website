@@ -213,6 +213,4 @@ const initGlobalConfig = () => {
 	return config;
 };
 
-export default {
-	initGlobalConfig
-};
+export default initGlobalConfig();

@@ -45,7 +45,7 @@ logger.stream = {
  * Returns a Winston object for logging with the File transport
  */
 logger.getLogOptions = () => {
-	const conf = clone(config.initGlobalConfig(), true);
+	const conf = clone(config, true);
 	const configFileLogger = conf.log.fileLogger;
 
 	if (!has(conf, "log.fileLogger.directoryPath") || !has(conf, "log.fileLogger.fileName")) {

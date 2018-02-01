@@ -22,16 +22,15 @@ const loadModels = (callback) => {
 
 // Initialize Mongoose
 const connect = (callback) => {
-	const conf = config.initGlobalConfig();
-	mongoose.Promise = conf.db.promise;
+	mongoose.Promise = config.db.promise;
 
-	const options = merge(conf.db.options || {});
+	const options = merge(config.db.options || {});
 
 	mongoose
-		.connect(conf.db.uri, options)
+		.connect(config.db.uri, options)
 		.then((connection) => {
 			// Enabling mongoose debug mode if required
-			mongoose.set("debug", conf.db.debug);
+			mongoose.set("debug", config.db.debug);
 
 			// Call callback FN
 			if (callback) callback(connection.db);
