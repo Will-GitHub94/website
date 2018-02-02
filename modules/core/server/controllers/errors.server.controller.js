@@ -58,11 +58,11 @@ const getErrorMessage = (err) => {
 				message = "Something went wrong";
 		}
 	} else if (err.message && !err.errors) {
-		message = err.message;
+		[message] = err;
 	} else {
 		Object.keys(err.errors).forEach((errName) => {
 			if (err.errors[errName].message) {
-				message = err.errors[errName].message;
+				[message] = err.errors[errName];
 			}
 		});
 	}

@@ -3,7 +3,7 @@
  */
 import users from "../controllers/users.server.controller";
 
-export default (app) => {
+const authRoutes = (app) => {
 	// Setting up the users password api
 	app.route("/api/auth/forgot").post(users.forgot);
 	app.route("/api/auth/reset/:token").get(users.validateResetToken);
@@ -18,3 +18,5 @@ export default (app) => {
 	app.route("/api/auth/:strategy").get(users.oauthCall);
 	app.route("/api/auth/:strategy/callback").get(users.oauthCallback);
 };
+
+export default authRoutes;

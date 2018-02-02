@@ -32,7 +32,7 @@ const seed = (collection, options) => {
 
 	return new Promise(((resolve, reject) => {
 		const Model = mongoose.model(collection.model);
-		const docs = collection.docs;
+		const { docs } = collection;
 
 		const skipWhen = collection.skip ? collection.skip.when : null;
 

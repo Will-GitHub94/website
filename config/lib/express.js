@@ -4,7 +4,6 @@
 import bodyParser from "body-parser";
 import session from "express-session";
 import connectMongo from "connect-mongo";
-import favicon from "serve-favicon";
 import compress from "compression";
 import methodOverride from "method-override";
 import cookieParser from "cookie-parser";
@@ -36,11 +35,8 @@ const initLocalVariables = (app) => {
 	app.locals.googleAnalyticsTrackingID = config.app.googleAnalyticsTrackingID;
 	app.locals.facebookAppId = config.facebook.clientID;
 	app.locals.twitterUsername = config.twitter.username;
-	app.locals.jsFiles = config.files.client.js;
-	app.locals.cssFiles = config.files.client.css;
 	app.locals.livereload = config.livereload;
 	app.locals.logo = config.logo;
-	app.locals.favicon = config.favicon;
 	app.locals.env = process.env.NODE_ENV;
 	app.locals.domain = config.domain;
 
@@ -63,9 +59,6 @@ const initMiddleware = (app) => {
 		},
 		level: 9,
 	}));
-
-	// Initialize favicon middleware
-	app.use(favicon(app.locals.favicon));
 
 	// Enable logger (morgan) if enabled in the configuration file
 	if (has(config, "log.format")) {
@@ -121,6 +114,7 @@ const initSession = (app, db) => {
 		store: new MongoStore({
 			db,
 			collection: config.sessionCollection,
+			url: config.db.uri
 		}),
 	}));
 
@@ -133,7 +127,7 @@ const initSession = (app, db) => {
  */
 const initModulesConfiguration = (app) => {
 	config.files.server.configs.forEach((configPath) => {
-		require(path.resolve(configPath))(app);
+		require(path.resolve(configPath)).default(app);
 	});
 };
 
@@ -162,7 +156,7 @@ const initHelmetHeaders = (app) => {
 const initModulesServerPolicies = () => {
 	// Globbing policy files
 	config.files.server.policies.forEach((policyPath) => {
-		require(path.resolve(policyPath)).invokeRolesPolicies();
+		require(path.resolve(policyPath)).default.invokeRolesPolicies();
 	});
 };
 
@@ -172,7 +166,7 @@ const initModulesServerPolicies = () => {
 const initModulesServerRoutes = (app) => {
 	// Globbing routing files
 	config.files.server.routes.forEach((routePath) => {
-		require(path.resolve(routePath))(app);
+		require(path.resolve(routePath)).default(app);
 	});
 };
 
@@ -245,4 +239,6 @@ const init = (db) => {
 	return app;
 };
 
-export default init;
+export default {
+	init
+};

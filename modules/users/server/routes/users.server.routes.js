@@ -1,6 +1,6 @@
 import users from "../controllers/users.server.controller";
 
-export default (app) => {
+const userRoutes = (app) => {
 	// Setting up the users profile api
 	app.route("/api/users/me").get(users.me);
 	app.route("/api/users").put(users.update);
@@ -11,3 +11,5 @@ export default (app) => {
 	// Finish by binding the user middleware
 	app.param("userId", users.userByID);
 };
+
+export default userRoutes;

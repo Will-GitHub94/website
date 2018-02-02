@@ -13,7 +13,7 @@ const User = mongoose.model("User");
 /**
  * Module init function
  */
-export default (app) => {
+const userConfig = (app) => {
 	// Serialize sessions
 	passport.serializeUser((user, done) => {
 		done(null, user.id);
@@ -37,3 +37,5 @@ export default (app) => {
 	app.use(passport.initialize());
 	app.use(passport.session());
 };
+
+export default userConfig;

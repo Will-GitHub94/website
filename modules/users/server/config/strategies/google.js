@@ -3,11 +3,14 @@
 /**
  * Module dependencies
  */
-let passport = require("passport"),
-	GoogleStrategy = require("passport-google-oauth").OAuth2Strategy,
-	users = require("../../controllers/users.server.controller");
+import passport from "passport";
+import passportGoogle from "passport-google-oauth";
 
-module.exports = function (config) {
+import users from "../../controllers/users.server.controller";
+
+const GoogleStrategy = passportGoogle.Strategy;
+
+export default (config) => {
 	// Use google strategy
 	passport.use(new GoogleStrategy(
 		{
@@ -19,14 +22,14 @@ module.exports = function (config) {
 				"https://www.googleapis.com/auth/userinfo.email",
 			],
 		},
-		function (req, accessToken, refreshToken, profile, done) {
+		(req, accessToken, refreshToken, profile, done) => {
 		// Set the provider data and include tokens
-			var providerData = profile._json;
+			const providerData = profile._json;
 			providerData.accessToken = accessToken;
 			providerData.refreshToken = refreshToken;
 
 			// Create the user OAuth profile
-			var providerUserProfile = {
+			const providerUserProfile = {
 				firstName: profile.name.givenName,
 				lastName: profile.name.familyName,
 				displayName: profile.displayName,

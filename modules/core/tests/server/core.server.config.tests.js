@@ -766,7 +766,7 @@ describe("Configuration Tests:", () => {
 			fileTransport.filename.should.equal(`${_dir}/${_filename}`);
 		});
 
-		it("should use the default log format of "combined" when an invalid format was provided", () => {
+		it("should use the default log format of 'combined' when an invalid format was provided", () => {
 			const _logger = require(path.resolve("./config/lib/logger"));
 
 			// manually set the config log format to be invalid

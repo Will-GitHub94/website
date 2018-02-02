@@ -33,7 +33,9 @@ const connect = (callback) => {
 			mongoose.set("debug", config.db.debug);
 
 			// Call callback FN
-			if (callback) callback(connection.db);
+			if (callback) {
+				callback(connection.db);
+			}
 		})
 		.catch((err) => {
 			console.error(chalk.red("Could not connect to MongoDB!"));

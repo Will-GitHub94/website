@@ -3,11 +3,14 @@
 /**
  * Module dependencies
  */
-let passport = require("passport"),
-	GithubStrategy = require("passport-github").Strategy,
-	users = require("../../controllers/users.server.controller");
+import passport from "passport";
+import passportGh from "passport-github";
 
-module.exports = function (config) {
+import users from "../../controllers/users.server.controller";
+
+const GithubStrategy = passportGh.Strategy;
+
+export default (config) => {
 	// Use github strategy
 	passport.use(new GithubStrategy(
 		{
@@ -16,19 +19,19 @@ module.exports = function (config) {
 			callbackURL: config.github.callbackURL,
 			passReqToCallback: true,
 		},
-		function (req, accessToken, refreshToken, profile, done) {
-		// Set the provider data and include tokens
-			var providerData = profile._json;
+		(req, accessToken, refreshToken, profile, done) => {
+			// Set the provider data and include tokens
+			const providerData = profile._json;
 			providerData.accessToken = accessToken;
 			providerData.refreshToken = refreshToken;
 
 			// Create the user OAuth profile
-			var displayName = profile.displayName ? profile.displayName.trim() : profile.username.trim();
-			var iSpace = displayName.indexOf(" "); // index of the whitespace following the firstName
-			var firstName = iSpace !== -1 ? displayName.substring(0, iSpace) : displayName;
-			var lastName = iSpace !== -1 ? displayName.substring(iSpace + 1) : '';
+			const displayName = profile.displayName ? profile.displayName.trim() : profile.username.trim();
+			const iSpace = displayName.indexOf(" "); // index of the whitespace following the firstName
+			const firstName = (iSpace !== -1) ? displayName.substring(0, iSpace) : displayName;
+			const lastName = (iSpace !== -1) ? displayName.substring(iSpace + 1) : "";
 
-			var providerUserProfile = {
+			const providerUserProfile = {
 				firstName: firstName,
 				lastName: lastName,
 				displayName: displayName,
