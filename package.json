@@ -1,14 +1,14 @@
 {
-  "name": "meanjs",
-  "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js.",
-  "version": "0.6.0",
+  "name": "vanilla_node_server",
+  "description": "Basic server build with Node.js to build future applications off",
+  "version": "0.0.1",
   "meanjs-version": "0.6.0",
   "private": false,
-  "author": "https://github.com/meanjs/mean/graphs/contributors",
+  "author": "https://github.com/Will-GitHub94/vanilla_node_server/graphs/contributors",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/meanjs/mean.git"
+    "url": "https://github.com/Will-GitHub94/vanilla_node_server.git"
   },
   "engines": {
     "node": ">=6.10.0",

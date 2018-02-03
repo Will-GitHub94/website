@@ -1,12 +1,10 @@
 {
-  "name": "meanjs",
-  "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js",
-  "repository": "https://github.com/meanjs/mean",
-  "logo": "http://meanjs.org/img/logo-small.png",
+  "name": "vanilla_node_server",
+  "description": "Basic server build with Node.js to build future applications off",
+  "repository": "https://github.com/Will-GitHub94/vanilla_node_server",
   "keywords": [
     "mongodb",
     "express",
-    "angularjs",
     "node.js",
     "mongoose",
     "passport"
