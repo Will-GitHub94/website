@@ -1,6 +1,6 @@
 import users from "../controllers/users.server.controller";
 
-const userRoutes = (app) => {
+export default (app) => {
 	// Setting up the users profile api
 	app.route("/api/users/me").get(users.me);
 	app.route("/api/users").put(users.update);
@@ -12,4 +12,3 @@ const userRoutes = (app) => {
 	app.param("userId", users.userByID);
 };
 
-export default userRoutes;

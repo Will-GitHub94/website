@@ -1,6 +1,6 @@
 import core from "../controllers/core.server.controller";
 
-const coreRoutes = (app) => {
+export default (app) => {
 	// Define error pages
 	app.route("/server-error").get(core.renderServerError);
 
@@ -9,8 +9,4 @@ const coreRoutes = (app) => {
 
 	// Define application route
 	app.route("/*").get(core.renderIndex);
-};
-
-export default {
-	coreRoutes
 };

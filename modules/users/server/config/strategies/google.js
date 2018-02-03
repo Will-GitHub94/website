@@ -8,7 +8,7 @@ import passportGoogle from "passport-google-oauth";
 
 import users from "../../controllers/users.server.controller";
 
-const GoogleStrategy = passportGoogle.Strategy;
+const GoogleStrategy = passportGoogle.OAuth2Strategy;
 
 export default (config) => {
 	// Use google strategy
@@ -18,7 +18,8 @@ export default (config) => {
 			clientSecret: config.google.clientSecret,
 			callbackURL: config.google.callbackURL,
 			passReqToCallback: true,
-			scope: ["https://www.googleapis.com/auth/userinfo.profile",
+			scope: [
+				"https://www.googleapis.com/auth/userinfo.profile",
 				"https://www.googleapis.com/auth/userinfo.email",
 			],
 		},

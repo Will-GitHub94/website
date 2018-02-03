@@ -193,7 +193,7 @@ const initErrorRoutes = (app) => {
  */
 const configureSocketIO = (app, db) => {
 	// Load the Socket.io configuration
-	const server = require("./socket.io")(app, db);
+	const server = require("./socket.io").default(app, db);
 
 	// Return server object
 	return server;

@@ -13,7 +13,7 @@ const User = mongoose.model("User");
 /**
  * Module init function
  */
-const userConfig = (app) => {
+export default (app) => {
 	// Serialize sessions
 	passport.serializeUser((user, done) => {
 		done(null, user.id);
@@ -30,12 +30,10 @@ const userConfig = (app) => {
 
 	// Initialize strategies
 	config.utils.getGlobbedPaths(path.join(__dirname, "./strategies/**/*.js")).forEach((strategy) => {
-		require(path.resolve(strategy))(config);
+		require(path.resolve(strategy)).default(config);
 	});
 
 	// Add passport"s middleware
 	app.use(passport.initialize());
 	app.use(passport.session());
 };
-
-export default userConfig;

@@ -1,33 +1,32 @@
-
-
 /**
  * Module dependencies
  */
-let path = require("path"),
-	config = require(path.resolve("./config/config")),
-	errorHandler = require(path.resolve("./modules/core/server/controllers/errors.server.controller")),
-	mongoose = require("mongoose"),
-	User = mongoose.model("User"),
-	nodemailer = require("nodemailer"),
-	async = require("async"),
-	crypto = require("crypto");
+import nodemailer from "nodemailer";
+import async from "async";
+import crypto from "crypto";
+import mongoose from "mongoose";
+import path from "path";
 
+import config from "../../../../../config/config";
+import errorHandler from "../../../../core/server/controllers/errors.server.controller";
+
+const User = mongoose.model("User");
 const smtpTransport = nodemailer.createTransport(config.mailer.options);
 
 /**
  * Forgot for reset password (forgot POST)
  */
-exports.forgot = function (req, res, next) {
+const forgot = (req, res, next) => {
 	async.waterfall([
 		// Generate random token
-		function (done) {
+		(done) => {
 			crypto.randomBytes(20, (err, buffer) => {
 				const token = buffer.toString("hex");
 				done(err, token);
 			});
 		},
 		// Lookup user by username
-		function (token, done) {
+		(token, done) => {
 			if (req.body.usernameOrEmail) {
 				const usernameOrEmail = String(req.body.usernameOrEmail).toLowerCase();
 
@@ -43,14 +42,15 @@ exports.forgot = function (req, res, next) {
 						});
 					} else if (user.provider !== "local") {
 						return res.status(400).send({
-							message: `It seems like you signed up using your ${user.provider} account, please sign in using that provider.`,
+							message: `It seems like you signed up using your ${user.provider} account,`
+										+ "please sign in using that provider.",
 						});
 					}
 					user.resetPasswordToken = token;
 					user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-					user.save((err) => {
-						done(err, token, user);
+					user.save((errSave) => {
+						done(errSave, token, user);
 					});
 				});
 			} else {
@@ -59,7 +59,7 @@ exports.forgot = function (req, res, next) {
 				});
 			}
 		},
-		function (token, user, done) {
+		(token, user, done) => {
 			let httpTransport = "http://";
 			if (config.secure && config.secure.ssl === true) {
 				httpTransport = "https://";
@@ -74,7 +74,7 @@ exports.forgot = function (req, res, next) {
 			});
 		},
 		// If valid email, send reset email using service
-		function (emailHTML, user, done) {
+		(emailHTML, user, done) => {
 			const mailOptions = {
 				to: user.email,
 				from: config.mailer.from,
@@ -105,7 +105,7 @@ exports.forgot = function (req, res, next) {
 /**
  * Reset password GET from email token
  */
-exports.validateResetToken = function (req, res) {
+const validateResetToken = (req, res) => {
 	User.findOne({
 		resetPasswordToken: req.params.token,
 		resetPasswordExpires: {
@@ -123,13 +123,12 @@ exports.validateResetToken = function (req, res) {
 /**
  * Reset password POST from email token
  */
-exports.reset = function (req, res, next) {
+const reset = (req, res, next) => {
 	// Init Variables
 	const passwordDetails = req.body;
 
 	async.waterfall([
-
-		function (done) {
+		(done) => {
 			User.findOne({
 				resetPasswordToken: req.params.token,
 				resetPasswordExpires: {
@@ -142,15 +141,15 @@ exports.reset = function (req, res, next) {
 						user.resetPasswordToken = undefined;
 						user.resetPasswordExpires = undefined;
 
-						user.save((err) => {
-							if (err) {
+						user.save((errSave) => {
+							if (errSave) {
 								return res.status(422).send({
-									message: errorHandler.getErrorMessage(err),
+									message: errorHandler.getErrorMessage(errSave),
 								});
 							}
-							req.login(user, (err) => {
-								if (err) {
-									res.status(400).send(err);
+							req.login(user, (errLogin) => {
+								if (errLogin) {
+									res.status(400).send(errLogin);
 								} else {
 									// Remove sensitive data before return authenticated user
 									user.password = undefined;
@@ -158,7 +157,7 @@ exports.reset = function (req, res, next) {
 
 									res.json(user);
 
-									done(err, user);
+									done(errLogin, user);
 								}
 							});
 						});
@@ -174,7 +173,7 @@ exports.reset = function (req, res, next) {
 				}
 			});
 		},
-		function (user, done) {
+		(user, done) => {
 			res.render("modules/users/server/templates/reset-password-confirm-email", {
 				name: user.displayName,
 				appName: config.app.title,
@@ -183,7 +182,7 @@ exports.reset = function (req, res, next) {
 			});
 		},
 		// If valid email, send reset email using service
-		function (emailHTML, user, done) {
+		(emailHTML, user, done) => {
 			const mailOptions = {
 				to: user.email,
 				from: config.mailer.from,
@@ -205,7 +204,7 @@ exports.reset = function (req, res, next) {
 /**
  * Change Password
  */
-exports.changePassword = function (req, res, next) {
+const changePassword = (req, res, next) => {
 	// Init Variables
 	const passwordDetails = req.body;
 
@@ -217,15 +216,15 @@ exports.changePassword = function (req, res, next) {
 						if (passwordDetails.newPassword === passwordDetails.verifyPassword) {
 							user.password = passwordDetails.newPassword;
 
-							user.save((err) => {
-								if (err) {
+							user.save((errSave) => {
+								if (errSave) {
 									return res.status(422).send({
-										message: errorHandler.getErrorMessage(err),
+										message: errorHandler.getErrorMessage(errSave),
 									});
 								}
-								req.login(user, (err) => {
+								req.login(user, (errLogin) => {
 									if (err) {
-										res.status(400).send(err);
+										res.status(400).send(errLogin);
 									} else {
 										res.send({
 											message: "Password changed successfully",
@@ -259,4 +258,11 @@ exports.changePassword = function (req, res, next) {
 			message: "User is not signed in",
 		});
 	}
+};
+
+export default {
+	forgot,
+	validateResetToken,
+	reset,
+	changePassword
 };

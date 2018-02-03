@@ -1,20 +1,21 @@
-
-
 /**
  * Module dependencies
  */
-let passport = require("passport"),
-	LocalStrategy = require("passport-local").Strategy,
-	User = require("mongoose").model("User");
+import passport from "passport";
+import passportLocal from "passport-local";
+import mongoose from "mongoose";
 
-module.exports = function () {
+const LocalStrategy = passportLocal.Strategy;
+const User = mongoose.model("User");
+
+export default () => {
 	// Use local strategy
 	passport.use(new LocalStrategy(
 		{
 			usernameField: "usernameOrEmail",
 			passwordField: "password",
 		},
-		function (usernameOrEmail, password, done) {
+		(usernameOrEmail, password, done) => {
 			User.findOne({
 				$or: [{
 					username: usernameOrEmail.toLowerCase(),

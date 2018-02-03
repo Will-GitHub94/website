@@ -5,12 +5,17 @@
  */
 import { extend } from "lodash";
 
+import authenticateControl from "./users/users.authentication.server.controller";
+import authorizeControl from "./users/users.authorization.server.controller";
+import passControl from "./users/users.password.server.controller";
+import profileControl from "./users/users.profile.server.controller";
+
 /**
  * Extend user"s controller
  */
-module.exports = extend(
-	require("./users/users.authentication.server.controller"),
-	require("./users/users.authorization.server.controller"),
-	require("./users/users.password.server.controller"),
-	require("./users/users.profile.server.controller")
+export default extend(
+	authenticateControl,
+	authorizeControl,
+	passControl,
+	profileControl
 );

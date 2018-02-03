@@ -3,11 +3,13 @@
 /**
  * Module dependencies
  */
-let passport = require("passport"),
-	LinkedInStrategy = require("passport-linkedin").Strategy,
-	users = require("../../controllers/users.server.controller");
+import passport from "passport";
+import passportLinkedIn from "passport-linkedin";
+import users from "../../controllers/users.server.controller";
 
-module.exports = function (config) {
+const LinkedInStrategy = passportLinkedIn.Strategy;
+
+export default (config) => {
 	// Use linkedin strategy
 	passport.use(new LinkedInStrategy(
 		{
@@ -15,20 +17,26 @@ module.exports = function (config) {
 			consumerSecret: config.linkedin.clientSecret,
 			callbackURL: config.linkedin.callbackURL,
 			passReqToCallback: true,
-			profileFields: ["id", "first-name", "last-name", "email-address", "picture-url"],
+			profileFields: [
+				"id",
+				"first-name",
+				"last-name",
+				"email-address",
+				"picture-url",
+			],
 			scope: [
 				"r_basicprofile",
 				"r_emailaddress",
 			],
 		},
-		function (req, accessToken, refreshToken, profile, done) {
+		(req, accessToken, refreshToken, profile, done) => {
 		// Set the provider data and include tokens
-			var providerData = profile._json;
+			const providerData = profile._json;
 			providerData.accessToken = accessToken;
 			providerData.refreshToken = refreshToken;
 
 			// Create the user OAuth profile
-			var providerUserProfile = {
+			const providerUserProfile = {
 				firstName: profile.name.givenName,
 				lastName: profile.name.familyName,
 				displayName: profile.displayName,

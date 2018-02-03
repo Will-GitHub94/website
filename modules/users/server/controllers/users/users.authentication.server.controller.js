@@ -1,5 +1,3 @@
-
-
 /**
  * Module dependencies
  */
@@ -83,7 +81,7 @@ const signout = (req, res) => {
  * OAuth provider call
  */
 const oauthCall = (req, res, next) => {
-	const strategy = req.params.strategy;
+	const { strategy } = req.params;
 	// Authenticate
 	passport.authenticate(strategy)(req, res, next);
 };
@@ -92,7 +90,7 @@ const oauthCall = (req, res, next) => {
  * OAuth callback
  */
 const oauthCallback = (req, res, next) => {
-	const strategy = req.params.strategy;
+	const { strategy } = req.params;
 
 	// info.redirect_to contains inteded redirect path
 	passport.authenticate(strategy, (errAuth, user, info) => {
@@ -185,7 +183,7 @@ const saveOAuthUserProfile = (req, providerUserProfile, done) => {
 			}
 		} else {
 			// User is already logged in, join the provider data to the existing user
-			user = req.user;
+			[user] = req;
 
 			// Check if an existing user was found for this provider account
 			if (existingUser) {
@@ -218,8 +216,8 @@ const saveOAuthUserProfile = (req, providerUserProfile, done) => {
  * Remove OAuth provider
  */
 const removeOAuthProvider = (req, res, next) => {
-	const user = req.user;
-	const provider = req.query.provider;
+	const { user } = req;
+	const { provider } = req.query;
 
 	if (!user) {
 		return res.status(401).json({

@@ -1,13 +1,13 @@
-
-
 /**
  * Module dependencies
  */
-let passport = require("passport"),
-	PayPalStrategy = require("passport-paypal-openidconnect").Strategy,
-	users = require("../../controllers/users.server.controller");
+import passport from "passport";
+import passportPayPal from "passport-paypal-openidconnect";
+import users from "../../controllers/users.server.controller";
 
-module.exports = function (config) {
+const PayPalStrategy = passportPayPal.Strategy;
+
+export default (config) => {
 	passport.use(new PayPalStrategy(
 		{
 			clientID: config.paypal.clientID,
@@ -18,14 +18,14 @@ module.exports = function (config) {
 			passReqToCallback: true,
 
 		},
-		function (req, accessToken, refreshToken, profile, done) {
+		(req, accessToken, refreshToken, profile, done) => {
 		// Set the provider data and include tokens
-			var providerData = profile._json;
+			const providerData = profile._json;
 			providerData.accessToken = accessToken;
 			providerData.refreshToken = refreshToken;
 
 			// Create the user OAuth profile
-			var providerUserProfile = {
+			const providerUserProfile = {
 				firstName: profile.name.givenName,
 				lastName: profile.name.familyName,
 				displayName: profile.displayName,

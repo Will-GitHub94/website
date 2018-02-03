@@ -1,5 +1,3 @@
-
-
 /**
  * Module dependencies
  */
@@ -31,4 +29,6 @@ const userByID = (req, res, next, id) => {
 	});
 };
 
-export default userByID;
+export default {
+	userByID
+};

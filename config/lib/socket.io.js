@@ -18,7 +18,7 @@ const MongoStore = connectMongo(session);
 // Define the Socket.io configuration method
 export default (app, db) => {
 	let server;
-	if (config.secure && config.secure.ssl) {
+	if (config.secure && config.secure.ssl === true) {
 		// Load SSL key and certificate
 		const privateKey = fs.readFileSync(path.resolve(config.secure.privateKey), "utf8");
 		const certificate = fs.readFileSync(path.resolve(config.secure.certificate), "utf8");
@@ -76,6 +76,7 @@ export default (app, db) => {
 	const mongoStore = new MongoStore({
 		db,
 		collection: config.sessionCollection,
+		url: config.db.uri
 	});
 
 	// Intercept Socket.io"s handshake request

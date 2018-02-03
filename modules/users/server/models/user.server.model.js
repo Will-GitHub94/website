@@ -9,7 +9,7 @@ import chalk from "chalk";
 import crypto from "crypto";
 import config from "./../../../../config/config";
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 owasp.config(config.shared.owasp);
 

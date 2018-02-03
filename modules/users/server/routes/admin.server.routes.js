@@ -5,8 +5,7 @@ import adminPolicy from "../policies/admin.server.policy";
 import admin from "../controllers/admin.server.controller";
 import userRoutes from "./users.server.routes";
 
-const adminRoutes = (app) => {
-	// User route registration first. Ref: #713
+export default (app) => {
 	userRoutes(app);
 
 	// Users collection routes
@@ -22,5 +21,3 @@ const adminRoutes = (app) => {
 	// Finish by binding the user middleware
 	app.param("userId", admin.userByID);
 };
-
-export default adminRoutes;
