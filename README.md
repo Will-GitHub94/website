@@ -15,21 +15,21 @@ Changes that are planned to happen are:
  - Switch to use Express Router
 
 ## About
-The reason for developing this project *(extend MEAN.js as I should say)* is that I found it monotonous to re-write a basic server for every project I did. Future projects will now be cloned from this repo so it is much easier to spin up applications.<br>
+The reason for developing this project *(modify MEAN.js as I should say)* is that I found it monotonous to re-write a basic server for every project I did. Future projects will now be cloned from this repo so it is much easier to spin up applications.<br>
 I differed from the standard MEAN stack for the reason that the syntax was still in es5. I give large credit to the MEAN.js contributors for the structural layout of this application.<br>
 Even though it is a base project, there are still features that should be addressed that are included here:
 
- - Node.js as a server
- - Webpack as the module bundler
- - Express as the API middleware
- - ACL for the auth of Express endpoints
- - Passport for the auth middleware to 3rd party services *(i.e. Facebook)*
- - Gulp as the task runner
- - MongoDB as the data store
- - Mongoose as the database middleware
- - Winston as the logging mechanism
- - Socket.io for real-time bidirectional event-based comms
- - Mocha as the unit testing framework
+ - [Node.js](https://nodejs.org/en/) as a server
+ - [Webpack](https://webpack.js.org/) as the module bundler
+ - [Express](https://expressjs.com/) as the API middleware
+ - [ACL](https://www.npmjs.com/package/acl) for the auth of Express endpoints
+ - [Passport](http://www.passportjs.org/) for the auth middleware to 3rd party services *(i.e. Facebook)*
+ - [Gulp](https://gulpjs.com/) as the task runner
+ - [MongoDB](https://www.mongodb.com/) as the data store
+ - [Mongoose](http://mongoosejs.com/) for object modelling
+ - [Winston](https://www.npmjs.com/package/winston) as the logging mechanism
+ - [Socket.io](https://socket.io/) for real-time bidirectional event-based comms
+ - [Mocha](https://mochajs.org/) as the unit testing framework
 
 ## Before You Begin
 Before you begin we recommend you read about the basic building blocks that assemble a MEAN.JS application:
