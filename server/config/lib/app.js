@@ -42,10 +42,7 @@ const start = (callback) => {
 			console.log(chalk.green(`Environment:     ${process.env.NODE_ENV}`));
 			console.log(chalk.green(`Server:          ${server}`));
 			console.log(chalk.green(`Database:        ${conf.db.uri}`));
-			console.log(chalk.green(`App version:     ${conf.meanjs.version}`));
-			if (conf.meanjs["meanjs-version"]) {
-				console.log(chalk.green(`MEAN.JS version: ${conf.meanjs["meanjs-version"]}`));
-			}
+			console.log(chalk.green(`App version:     ${conf.pkg.version}`));
 			console.log("--");
 
 			if (callback) {

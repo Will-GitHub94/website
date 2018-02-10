@@ -7,7 +7,7 @@ import generatePassword from "generate-password";
 import owasp from "owasp-password-strength-test";
 import chalk from "chalk";
 import crypto from "crypto";
-import config from "./../../../../config/config";
+import config from "./../../../config/config";
 
 const { Schema } = mongoose;
 

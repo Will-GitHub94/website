@@ -1,12 +1,18 @@
 {
 	"presets": [
-		"es2015"
+		"react",
+		"es2015",
+		"stage-0"
 	],
+	"plugins": ["react-hot-loader/babel"],
 	"env": {
 		"production": {
 			"presets": [
 				"es2015",
-				"es2015-native-modules"
+				"react",
+				"react-optimize",
+				"es2015-native-modules",
+				"stage-0"
 			]
 		}
 	}

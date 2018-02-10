@@ -1,5 +1,5 @@
 import validator from "validator";
-import config from "../../../../config/config";
+import config from "../../../config/config";
 
 /**
  * Render the main application page

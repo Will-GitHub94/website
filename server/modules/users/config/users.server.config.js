@@ -6,7 +6,7 @@
 import passport from "passport";
 import mongoose from "mongoose";
 import path from "path";
-import config from "../../../../config/config";
+import config from "../../../config/config";
 
 const User = mongoose.model("User");
 

@@ -14,7 +14,7 @@ import defaultConfig from "./env/default";
 import devConfig from "./env/development";
 import prodConfig from "./env/production";
 import localDevConfig from "./env/local-development";
-import pkg from "../package";
+import pkg from "../../package.json";
 
 /**
  * Get files by glob patterns
@@ -182,7 +182,7 @@ const initGlobalConfig = () => {
 	}
 
 	// read package.json for MEAN.JS project information
-	config.meanjs = pkg;
+	config.pkg = pkg;
 
 	// Extend the config object with the local-NODE_ENV.js custom/local environment. This will override any settings
 	// present in the local configuration.

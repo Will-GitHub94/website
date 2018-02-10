@@ -16,6 +16,16 @@ import lusca from "lusca";
 import express from "express";
 import morgan from "morgan";
 
+import webpack from "webpack";
+import webpackDevMiddleware from "webpack-dev-middleware";
+import webpackHotMiddleware from "webpack-hot-middleware";
+import React from "react";
+import { renderToString } from "react-dom/server";
+import { match, RouterContext } from "react-router";
+
+import webpackConfig from "../../../webpack.config.dev";
+import clientRoutes from "../../../client/js/routes.jsx";
+
 import config from "../config";
 import logger from "./logger";
 
@@ -48,31 +58,36 @@ const initLocalVariables = (app) => {
 	});
 };
 
-/**
- * Initialize application middleware
- */
-const initMiddleware = (app) => {
-	// Should be placed before express.static
+const initWebpackMiddleware = (app) => {
+	const isDevMode = process.env.NODE_ENV === "development";
+
+	if (isDevMode) {
+		const compiler = webpack(webpackConfig);
+
+		app.use(webpackDevMiddleware(compiler, {
+			noInfo: true,
+			publicPath: webpackDevMiddleware.output.publicPath
+		}));
+		app.use(webpackHotMiddleware(compiler));
+	}
+};
+
+const initCompressionMiddleware = (app) => {
 	app.use(compress({
 		filter(req, res) {
 			return (/json|text|javascript|css|font|svg/).test(res.getHeader("Content-Type"));
 		},
 		level: 9,
 	}));
+};
 
-	// Enable logger (morgan) if enabled in the configuration file
+const initLoggingMiddleware = (app) => {
 	if (has(config, "log.format")) {
 		app.use(morgan(logger.getLogFormat(), logger.getMorganOptions()));
 	}
+};
 
-	// Environment dependent middleware
-	if (process.env.NODE_ENV === "development") {
-		// Disable views cache
-		app.set("view cache", false);
-	} else if (process.env.NODE_ENV === "production") {
-		app.locals.cache = "memory";
-	}
-
+const initBodyParsingMiddleware = (app) => {
 	// Request body parsing middleware should be above methodOverride
 	app.use(bodyParser.urlencoded({
 		extended: true,
@@ -83,6 +98,30 @@ const initMiddleware = (app) => {
 	// Add the cookie parser and flash middleware
 	app.use(cookieParser());
 	app.use(flash());
+};
+
+/**
+ * Initialize application middleware
+ */
+const initMiddleware = (app) => {
+	const isDevMode = process.env.NODE_ENV === "development";
+	const isProdMode = process.env.NODE_ENV === "production";
+
+	initCompressionMiddleware(app);
+
+	initLoggingMiddleware(app);
+
+	// Environment dependent middleware
+	if (isDevMode) {
+		// Disable views cache
+		app.set("view cache", false);
+	} else if (isProdMode) {
+		app.locals.cache = "memory";
+	}
+
+	initBodyParsingMiddleware(app);
+
+	initWebpackMiddleware(app);
 };
 
 /**
@@ -148,6 +187,45 @@ const initHelmetHeaders = (app) => {
 		force: true,
 	}));
 	app.disable("x-powered-by");
+};
+
+const initServerSideRendering = (app) =>{
+	app.use((req, res, next) => {
+		match({
+			clientRoutes,
+			location: req.url
+		}, (err, redirectLocation, renderProps) => {
+			if (err) {
+				return res.status(500).end(renderError(err));
+			}
+
+			if (redirectLocation) {
+				return res.redirect(302, redirectLocation.pathname + redirectLocation.search);
+			}
+
+			if (!renderProps) {
+				return next();
+			}
+
+			// return fetchComponentData(store, renderProps.components, renderProps.params)
+			// 	.then(() => {
+			// 		const initialView = renderToString(
+			// 			<Provider store={store}>
+			// 				<IntlWrapper>
+			// 					<RouterContext {...renderProps} />
+			// 				</IntlWrapper>
+			// 			</Provider>
+			// 		);
+			// 		const finalState = store.getState();
+            //
+			// 		res
+			// 			.set('Content-Type', 'text/html')
+			// 			.status(200)
+			// 			.end(renderFullPage(initialView, finalState));
+			// 	})
+			// 	.catch((error) => next(error));
+		});
+	});
 };
 
 /**
@@ -223,6 +301,9 @@ const init = (db) => {
 
 	// Initialize Modules configuration
 	initModulesConfiguration(app);
+
+	// Initialise Server Side Rendering based on routes matched by React-router.
+	initServerSideRendering(app);
 
 	// Initialize modules server authorization policies
 	initModulesServerPolicies();

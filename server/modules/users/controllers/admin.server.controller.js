@@ -4,7 +4,7 @@
  * Module dependencies
  */
 import mongoose from "mongoose";
-import errorHandler from "../../../core/server/controllers/errors.server.controller";
+import errorHandler from "../../core/controllers/errors.server.controller";
 
 const User = mongoose.model("User");
 /**
