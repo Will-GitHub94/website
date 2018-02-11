@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
-import "../../styles/Main.less"
+import Links from "./Links.jsx";
+import "../../styles/Main.less";
 
 export default class Header extends React.Component {
 	constructor() {
@@ -23,21 +23,7 @@ export default class Header extends React.Component {
                 <h1>{this.state.author}</h1>
                 <h3>{this.state.role}</h3>
                 <h5>{this.props.pageName}</h5>
-
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/about-me">About Me</Link>
-                    </li>
-                    <li>
-                        <Link to="/projects">Projects</Link>
-                    </li>
-                    <li>
-                        <Link to="/knowledge">Knowledge</Link>
-                    </li>
-                </ul>
+				<Links/>
   			</header>
 	  	)
    	}

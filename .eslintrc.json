@@ -8,11 +8,15 @@
 		"node": true,
 		"mocha": true,
 		"es6": true,
-		"mongo": true
+		"mongo": true,
+		"browser": true
 	},
 	"parserOptions": {
 		"ecmaVersion": 6,
-		"sourceType": "module"
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		}
 	},
 	"rules": {
 		"indent": ["error", "tab", {

@@ -1,15 +1,14 @@
 import React from "react";
-import { render } from "react-dom";
 import { AppContainer } from "react-hot-loader";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
+import ReactDOM from "react-dom";
+import App from "../App.jsx";
 
-import routes from "./routes.jsx";
-
-render(
+ReactDOM.render(
 	<AppContainer>
-		<Router>
-			{routes}
-		</Router>
+		<BrowserRouter>
+			<App/>
+		</BrowserRouter>
 	</AppContainer>,
 	document.getElementById("app")
 );

@@ -785,7 +785,7 @@ describe("Configuration Tests:", () => {
 				options: {
 					stream: {
 						directoryPath: process.cwd(),
-						fileName: '',
+						fileName: "",
 					},
 				},
 			};
@@ -800,7 +800,7 @@ describe("Configuration Tests:", () => {
 				format: "combined",
 				options: {
 					stream: {
-						directoryPath: '',
+						directoryPath: "",
 						fileName: "app.log",
 					},
 				},

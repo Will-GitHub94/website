@@ -18,6 +18,7 @@ module.exports = {
 	resolve: {
 		extensions: [
 			".js",
+			".jsx",
 		],
 		modules: [
 			"client",
@@ -30,31 +31,31 @@ module.exports = {
 			{
 				test: /\.js$/,
 				exclude: /node_modules/,
-				loader: 'babel-loader',
+				loader: "babel-loader",
 				query: {
 					presets: [
-						'react',
-						'es2015',
-						'stage-0',
+						"react",
+						"es2015",
+						"stage-0",
 					],
 					plugins: [
 						[
-							'babel-plugin-webpack-loaders', {
-							'config': './webpack.config.babel.js',
-							"verbose": false
-						}
+							"babel-plugin-webpack-loaders", {
+								config: "./webpack.config.babel.js",
+								verbose: false
+							}
 						]
 					]
 				},
 			}, {
 				test: /\.json$/,
-				loader: 'json-loader',
+				loader: "json-loader",
 			},
 		],
 	},
 	plugins: [
 		new ExternalsPlugin({
-			type: 'commonjs',
+			type: "commonjs",
 			include: `${__dirname}/node_modules/`,
 		}),
 	],

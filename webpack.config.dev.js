@@ -4,15 +4,15 @@ const webpack = require("webpack");
 module.exports = {
 	entry: {
 		app: [
-			'eventsource-polyfill',
-			'webpack-hot-middleware/client',
-			'webpack/hot/only-dev-server',
-			'react-hot-loader/patch',
-			'./client/index.js',
+			"eventsource-polyfill",
+			"webpack-hot-middleware/client",
+			"webpack/hot/only-dev-server",
+			"react-hot-loader/patch",
+			"./client/js/client.jsx",
 		],
 		vendor: [
-			'react',
-			'react-dom',
+			"react",
+			"react-dom",
 		],
 	},
 	target: "node",
@@ -36,14 +36,9 @@ module.exports = {
 	module: {
 		loaders: [
 			{
-				test: /\.js*$/,
+				test: /\.jsx*$/,
 				exclude: /node_modules/,
-				loader: "babel-loader",
-				query: {
-					presets: [
-						"es2015"
-					],
-				},
+				loader: "babel-loader"
 			}, {
 				test: /\.json$/,
 				loader: "json-loader",
@@ -62,14 +57,14 @@ module.exports = {
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.optimize.CommonsChunkPlugin({
-			name: 'vendor',
+			name: "vendor",
 			minChunks: Infinity,
-			filename: 'vendor.js',
+			filename: "vendor.js",
 		}),
 		new webpack.DefinePlugin({
-			'process.env': {
+			"process.env": {
 				CLIENT: JSON.stringify(true),
-				'NODE_ENV': JSON.stringify('development'),
+				NODE_ENV: JSON.stringify("development"),
 			}
 		}),
 	]

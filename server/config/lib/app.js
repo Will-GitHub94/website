@@ -17,7 +17,7 @@ const seedDB = () => {
 
 const init = (callback) => {
 	mongooseService.connect((db) => {
-		// Initialize Models
+		//  Initialize Models
 		mongooseService.loadModels(seedDB);
 
 		// Initialize express

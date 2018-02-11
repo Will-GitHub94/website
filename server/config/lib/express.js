@@ -19,12 +19,10 @@ import morgan from "morgan";
 import webpack from "webpack";
 import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
-import React from "react";
-import { renderToString } from "react-dom/server";
-import { match, RouterContext } from "react-router";
+import ReactDOMServer from "react-dom/server";
 
 import webpackConfig from "../../../webpack.config.dev";
-import clientRoutes from "../../../client/js/routes.jsx";
+import clientRouter from "./client-router.jsx";
 
 import config from "../config";
 import logger from "./logger";
@@ -66,7 +64,7 @@ const initWebpackMiddleware = (app) => {
 
 		app.use(webpackDevMiddleware(compiler, {
 			noInfo: true,
-			publicPath: webpackDevMiddleware.output.publicPath
+			publicPath: webpackConfig.output.publicPath
 		}));
 		app.use(webpackHotMiddleware(compiler));
 	}
@@ -189,42 +187,10 @@ const initHelmetHeaders = (app) => {
 	app.disable("x-powered-by");
 };
 
-const initServerSideRendering = (app) =>{
+const initServerSideRendering = (app) => {
 	app.use((req, res, next) => {
-		match({
-			clientRoutes,
-			location: req.url
-		}, (err, redirectLocation, renderProps) => {
-			if (err) {
-				return res.status(500).end(renderError(err));
-			}
-
-			if (redirectLocation) {
-				return res.redirect(302, redirectLocation.pathname + redirectLocation.search);
-			}
-
-			if (!renderProps) {
-				return next();
-			}
-
-			// return fetchComponentData(store, renderProps.components, renderProps.params)
-			// 	.then(() => {
-			// 		const initialView = renderToString(
-			// 			<Provider store={store}>
-			// 				<IntlWrapper>
-			// 					<RouterContext {...renderProps} />
-			// 				</IntlWrapper>
-			// 			</Provider>
-			// 		);
-			// 		const finalState = store.getState();
-            //
-			// 		res
-			// 			.set('Content-Type', 'text/html')
-			// 			.status(200)
-			// 			.end(renderFullPage(initialView, finalState));
-			// 	})
-			// 	.catch((error) => next(error));
-		});
+		const html = ReactDOMServer.renderToString(clientRouter.getRouter(req.url));
+		res.status(200).send(html);
 	});
 };
 

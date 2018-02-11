@@ -123,6 +123,7 @@
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-require": "0.0.1",
+    "eventsource-polyfill": "^0.9.6",
     "gulp-istanbul": "~1.1.1",
     "gulp-mocha": "~3.0.1",
     "gulp-protractor": "~4.0.0",
