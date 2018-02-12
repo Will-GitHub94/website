@@ -189,7 +189,9 @@ const initHelmetHeaders = (app) => {
 
 const initServerSideRendering = (app) => {
 	app.use((req, res, next) => {
-		const html = ReactDOMServer.renderToString(clientRouter.getRouter(req.url));
+		const context = {};
+
+		const html = ReactDOMServer.renderToString(clientRouter(req.url, context));
 		res.status(200).send(html);
 	});
 };

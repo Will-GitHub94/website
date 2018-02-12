@@ -124,6 +124,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-require": "0.0.1",
     "eventsource-polyfill": "^0.9.6",
+    "file-loader": "^1.1.6",
     "gulp-istanbul": "~1.1.1",
     "gulp-mocha": "~3.0.1",
     "gulp-protractor": "~4.0.0",
@@ -132,6 +133,8 @@
     "semver": "~5.4.1",
     "should": "~11.2.1",
     "style-loader": "^0.20.1",
-    "supertest": "~3.0.0"
+    "supertest": "~3.0.0",
+    "url-loader": "^0.6.2",
+    "webpack-externals-plugin": "^1.0.0"
   }
 }

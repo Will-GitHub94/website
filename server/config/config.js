@@ -61,7 +61,9 @@ const getGlobbedPaths = (globPatterns, excludes) => {
  * Validate NODE_ENV existence
  */
 const validateEnvironmentVariable = () => {
-	const environmentFiles = glob.sync(`./config/env/${process.env.NODE_ENV}.js`);
+	const envFile = path.resolve(__dirname, `env/${process.env.NODE_ENV}.js`);
+
+	const environmentFiles = glob.sync(envFile);
 	console.log();
 	if (!environmentFiles.length) {
 		if (process.env.NODE_ENV) {

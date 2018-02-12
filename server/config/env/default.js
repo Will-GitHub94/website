@@ -1,17 +1,22 @@
 export default {
 	app: {
-		title: "Vanilla server",
-		description: "Basic server based on MEAN.js to build future applications off",
-		keywords: "mongodb, express, node.js, mongoose, passport",
+		title: "Website",
+		description: "My professional website using the MERN stack",
+		keywords: [
+			"mongodb",
+			"express",
+			"node.js",
+			"react.js",
+			"mongoose",
+			"passport"
+		],
 		googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || "GOOGLE_ANALYTICS_TRACKING_ID",
 	},
 	db: {
 		promise: global.Promise,
 	},
-	port: process.env.PORT || 3000,
+	port: process.env.PORT || 8000,
 	host: process.env.HOST || "0.0.0.0",
-	// DOMAIN config should be set to the fully qualified application accessible
-	// URL. For example: https://www.myapp.com (including port if required).
 	domain: process.env.DOMAIN,
 	// Session Cookie settings
 	sessionCookie: {
@@ -25,12 +30,9 @@ export default {
 		// in HTTPS mode.
 		secure: false,
 	},
-	// sessionSecret should be changed for security measures and concerns
 	sessionSecret: process.env.SESSION_SECRET || "VANILLA",
-	// sessionKey is the cookie session name
-	sessionKey: "sessionId",
+	sessionKey: process.env.SESSION_KEY || "sessionId",
 	sessionCollection: "sessions",
-	// Lusca config
 	csrf: {
 		csrf: false,
 		csp: false,
@@ -57,7 +59,6 @@ export default {
 		},
 	},
 	uploads: {
-		// Storage can be "local" or "s3"
 		storage: process.env.UPLOADS_STORAGE || "local",
 	},
 	shared: {

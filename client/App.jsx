@@ -10,9 +10,8 @@ import NoMatch from "./js/pages/NoMatch.jsx";
 export default () => (
 	<Switch>
 		<Route exact path="/" component={Home}/>
-		<Route path="about-me" component={AboutMe}/>
+		<Route path="/about-me" component={AboutMe}/>
 		<Route path="/knowledge" component={Knowledge}/>
 		<Route path="/projects" component={Projects}/>
-		<Route component={NoMatch}/>
 	</Switch>
 );

@@ -1,4 +1,6 @@
 node_modules/
 .idea/
 .editorconfig
+.env
 dist/
+server/config/env/local-development.js

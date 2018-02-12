@@ -1,4 +1,12 @@
 export default {
+	client: {
+		img: [
+			"client/img/*.jpg",
+			"client/img/*.png",
+			"client/img/*.gif",
+			"client/img/*.svg",
+		]
+	},
 	server: {
 		gulpConfig: [
 			"gulpfile.babel.js",

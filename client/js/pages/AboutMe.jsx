@@ -20,10 +20,6 @@ export default class About extends React.Component {
 		};
 	}
 
-	linkedInAuth() {
-
-	}
-
 	render() {
 		return (
 			<div>
