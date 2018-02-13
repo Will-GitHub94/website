@@ -9,6 +9,7 @@ if (process.env.NODE_ENV === "production") {
 	require("./dist/server.bundle.js");
 } else {
 	// Babel polyfill to convert ES6 code in runtime
+	require.extensions[".jpg"] = () => {};
 	require('babel-register')({
 		"plugins": [
 			[

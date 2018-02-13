@@ -51,6 +51,13 @@ module.exports = {
 				test: /\.json$/,
 				loader: "json-loader",
 			},
+			{
+				test: /\.(png|jpg|gif)$/,
+				loader: "url-loader",
+				options: {
+					limit: 8192
+				}
+			}
 		],
 	},
 	plugins: [

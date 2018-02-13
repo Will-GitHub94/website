@@ -54,12 +54,10 @@ module.exports = {
 			},
 			{
 				test: /\.(png|jpg|gif)$/,
-				use: [
-					{
-						loader: "url-loader",
-						options: {}
-					}
-				]
+				loader: "url-loader",
+				options: {
+					limit: 8192
+				}
 			}
 		],
 	},
@@ -74,6 +72,7 @@ module.exports = {
 			"process.env": {
 				CLIENT: JSON.stringify(true),
 				NODE_ENV: JSON.stringify("development"),
+				BROWSER: JSON.stringify(true)
 			}
 		}),
 	]

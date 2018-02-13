@@ -1,9 +1,6 @@
 import React from "react";
 
 import Links from "./Links.jsx";
-import "../../styles/Main.less";
-
-import profile from "../../img/Mygestic_on_peaks.jpg";
 
 export default class Header extends React.Component {
 	constructor() {
@@ -13,7 +10,6 @@ export default class Header extends React.Component {
 			author: "Will Ashworth",
 			role: "Software Engineer",
 		};
-		console.log(this.state.profilePicLoc);
 	}
 
 	// On refresh, this is not updated as it is just passing a prop to title but is not updating itself...
