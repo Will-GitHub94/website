@@ -20,9 +20,11 @@ import webpack from "webpack";
 import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
 import ReactDOMServer from "react-dom/server";
+import { StaticRouter } from "react-router";
+import React from "react";
 
 import webpackConfig from "../../../webpack.config.dev";
-import clientRouter from "./client-router.jsx";
+import App from "../../../client/App.jsx";
 
 import config from "../config";
 import logger from "./logger";
@@ -191,7 +193,11 @@ const initServerSideRendering = (app) => {
 	app.use((req, res, next) => {
 		const context = {};
 
-		const html = ReactDOMServer.renderToString(clientRouter(req.url, context));
+		const html = ReactDOMServer.renderToString(
+			<StaticRouter location={req.url} context={context}>
+				<App />
+			</StaticRouter>
+		);
 		res.status(200).send(html);
 	});
 };

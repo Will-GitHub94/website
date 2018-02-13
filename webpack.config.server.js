@@ -57,7 +57,16 @@ module.exports = {
 				options: {
 					limit: 8192
 				}
-			}
+			},
+			{
+				test: /\.less$/,
+				exclude: /node_modules/,
+				loaders: [
+					"style-loader",
+					"css-loader",
+					"less-loader"
+				]
+			},
 		],
 	},
 	plugins: [

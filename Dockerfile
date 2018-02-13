@@ -40,17 +40,17 @@ RUN sudo apt-get install -yq nodejs \
 # Install MEAN.JS Prerequisites
 RUN npm install --quiet -g gulp mocha pm2 && npm cache clean
 
-WORKDIR /opt/vanilla_node_server
+WORKDIR /opt/website
 
 # Copies the local package.json file to the container
 # and utilities docker container cache to not needing to rebuild
 # and install node_modules/ everytime we build the docker, but only
 # when the local package.json file changes.
 # Install npm packages
-COPY package.json /opt/vanilla_node_server/package.json
+COPY package.json /opt/website/package.json
 RUN npm install --quiet && npm cache clean
 
-COPY . /opt/vanilla_node_server
+COPY . /opt/website
 
 # Run Vanilla Node server
 CMD npm install && npm start

@@ -2,6 +2,9 @@ import React from "react";
 
 import Links from "./Links.jsx";
 
+import "../../styles/Main.less";
+import profilePic from "../../img/Mygestic_on_peaks.jpg";
+
 export default class Header extends React.Component {
 	constructor() {
 		super();
@@ -18,7 +21,7 @@ export default class Header extends React.Component {
 	render() {
 		return (
 			<header>
-				<img src={require("../../img/Mygestic_on_peaks.jpg")} alt="Professional Picture"/>
+				<img src={profilePic} alt="Professional Picture"/>
 				<h1>{this.state.author}</h1>
 				<h3>{this.state.role}</h3>
 				<h5>{this.props.pageName}</h5>

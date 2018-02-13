@@ -10,6 +10,7 @@ if (process.env.NODE_ENV === "production") {
 } else {
 	// Babel polyfill to convert ES6 code in runtime
 	require.extensions[".jpg"] = () => {};
+	require.extensions[".less"] = () => {};
 	require('babel-register')({
 		"plugins": [
 			[
