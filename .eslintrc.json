@@ -1,8 +1,12 @@
 {
-    "extends": "airbnb-base",
+    "extends": [
+		"airbnb-base",
+		"plugin:react/recommended"
+	],
     "plugins": [
         "import",
-		"require"
+		"require",
+		"react"
     ],
 	"env": {
 		"node": true,
@@ -55,6 +59,12 @@
 		"consistent-return": "warn",
 		"new-cap": ["error", {
 			"newIsCap": false
+		}],
+		"react/jsx-filename-extension": [1, {
+			"extensions": [
+				".js",
+				".jsx"
+			]
 		}]
 	}
 }

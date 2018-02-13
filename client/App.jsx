@@ -13,5 +13,6 @@ export default () => (
 		<Route path="/about-me" component={AboutMe}/>
 		<Route path="/knowledge" component={Knowledge}/>
 		<Route path="/projects" component={Projects}/>
+		<Route component={NoMatch}/>
 	</Switch>
 );
