@@ -40,6 +40,8 @@ export default {
 		p3p: "ABCDEF",
 		xssProtection: true,
 	},
+	logo: "client/img/brand/logo.png",
+	favicon: "client/img/brand/favicon.ico",
 	illegalUsernames: [
 		"administrator",
 		"password",

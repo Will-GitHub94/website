@@ -15,6 +15,7 @@ import { has } from "lodash";
 import lusca from "lusca";
 import express from "express";
 import morgan from "morgan";
+import favicon from "serve-favicon";
 
 import webpack from "webpack";
 import webpackDevMiddleware from "webpack-dev-middleware";
@@ -47,6 +48,7 @@ const initLocalVariables = (app) => {
 	app.locals.twitterUsername = config.twitter.username;
 	app.locals.livereload = config.livereload;
 	app.locals.logo = config.logo;
+	app.locals.favicon = config.favicon;
 	app.locals.env = process.env.NODE_ENV;
 	app.locals.domain = config.domain;
 
@@ -100,6 +102,10 @@ const initBodyParsingMiddleware = (app) => {
 	app.use(flash());
 };
 
+const initFaviconMiddleware = (app) => {
+	app.use(favicon(app.locals.favicon));
+};
+
 /**
  * Initialize application middleware
  */
@@ -122,6 +128,8 @@ const initMiddleware = (app) => {
 	initBodyParsingMiddleware(app);
 
 	initWebpackMiddleware(app);
+
+	initFaviconMiddleware(app);
 };
 
 /**
