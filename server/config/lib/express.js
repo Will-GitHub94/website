@@ -25,7 +25,7 @@ import { StaticRouter } from "react-router";
 import React from "react";
 
 import webpackConfig from "../../../webpack.config.dev";
-import App from "../../../client/App.jsx";
+import App from "../../../client/App";
 
 import config from "../config";
 import logger from "./logger";
@@ -204,8 +204,7 @@ const initServerSideRendering = (app) => {
 		const html = ReactDOMServer.renderToString(
 			<StaticRouter location={req.url} context={context}>
 				<App />
-			</StaticRouter>
-		);
+			</StaticRouter>);
 		res.status(200).send(html);
 	});
 };

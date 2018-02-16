@@ -1,5 +1,6 @@
 const nodeExternals = require("webpack-node-externals");
 const webpack = require("webpack");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
 	entry: {
@@ -8,7 +9,8 @@ module.exports = {
 			"webpack-hot-middleware/client",
 			"webpack/hot/only-dev-server",
 			"react-hot-loader/patch",
-			"./client/js/client.jsx",
+			"./client/index.jsx",
+			"./client/styles/Main.scss"
 		],
 		vendor: [
 			"react",
@@ -18,7 +20,7 @@ module.exports = {
 	target: "node",
 	output: {
 		path: `${__dirname}/dist/`,
-		filename: "app.js",
+		filename: "app.min.js",
 		publicPath: "http://0.0.0.0:8000/"
 	},
 	resolve: {
@@ -34,7 +36,7 @@ module.exports = {
 		nodeExternals()
 	],
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.jsx*$/,
 				exclude: /node_modules/,
@@ -44,21 +46,30 @@ module.exports = {
 				loader: "json-loader",
 			},
 			{
-				test: /\.less$/,
-				exclude: /node_modules/,
-				loaders: [
-					"style-loader",
-					"css-loader",
-					"less-loader"
-				]
-			},
-			{
 				test: /\.(png|jpg|gif)$/,
 				loader: "url-loader",
 				options: {
 					limit: 8192
 				}
-			}
+			},
+			{
+				test: /\.scss$/,
+				exclude: /node_modules/,
+				loader: ExtractTextPlugin.extract({
+					fallback: "style-loader",
+					use: [
+						"css-loader",
+						"sass-loader"
+					]
+				}),
+			},
+			{
+				test: /\.css$/,
+				loader: ExtractTextPlugin.extract({
+					fallback: "style-loader",
+					use: "css-loader"
+				})
+			},
 		],
 	},
 	plugins: [
@@ -74,6 +85,9 @@ module.exports = {
 				NODE_ENV: JSON.stringify("development"),
 				BROWSER: JSON.stringify(true)
 			}
+		}),
+		new ExtractTextPlugin({
+			filename: "styles.css"
 		}),
 	]
 };

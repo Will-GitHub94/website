@@ -1,14 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import "../../styles/Main.less"
+import "../../styles/Main.scss";
 
 export default class Links extends React.Component {
 	constructor() {
 		super();
 		this.state = {
 			componentName: "Links",
-		}
+		};
 	}
 
 	// On refresh, this is not updated as it is just passing a prop to title but is not updating itself...

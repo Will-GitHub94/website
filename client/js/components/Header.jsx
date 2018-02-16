@@ -1,9 +1,8 @@
 import React from "react";
 
 import Links from "./Links.jsx";
-
-import "../../styles/Main.less";
-import profilePic from "../../img/Mygestic_on_peaks.jpg";
+import profilePic from "../../img/brand/profilePic.jpg";
+import styles from "../../../dist/styles.css";
 
 export default class Header extends React.Component {
 	constructor() {
@@ -20,7 +19,7 @@ export default class Header extends React.Component {
 
 	render() {
 		return (
-			<header>
+			<header className={styles.header}>
 				<img src={profilePic} alt="Professional Picture"/>
 				<h1>{this.state.author}</h1>
 				<h3>{this.state.role}</h3>

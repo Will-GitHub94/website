@@ -4,3 +4,4 @@ node_modules/
 .env
 dist/
 server/config/env/local-development.js
+app.log

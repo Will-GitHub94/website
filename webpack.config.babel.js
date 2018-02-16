@@ -1,7 +1,4 @@
-let cssModulesIdentName = "[name]__[local]__[hash:base64:5]";
-if (process.env.NODE_ENV === "production") {
-	cssModulesIdentName = "[hash:base64]";
-}
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
 	output: {
@@ -19,26 +16,38 @@ module.exports = {
 		],
 	},
 	module: {
-		loaders: [
+		rules: [
+			{
+				test: /\.scss$/,
+				exclude: /node_modules/,
+				loader: ExtractTextPlugin.extract({
+					fallback: "style-loader",
+					use: [
+						"css-loader",
+						"sass-loader"
+					]
+				}),
+			},
 			{
 				test: /\.css$/,
 				exclude: /node_modules/,
-				loader: `style-loader!css-loader?localIdentName=${cssModulesIdentName}&modules&`
-							+ "importLoaders=1&sourceMap!postcss-loader",
+				loader: ExtractTextPlugin.extract({
+					fallback: "style-loader",
+					use: "css-loader"
+				})
 			},
 			{
-				test: /\.jpe?g$|\.gif$|\.png$|\.svg$/i,
-				loader: "url-loader?limit=10000",
+				test: /\.(jpeg|png|jpg|gif)$/,
+				loader: "url-loader",
+				options: {
+					limit: 10000
+				}
 			},
-			{
-				test: /\.less$/,
-				exclude: /node_modules/,
-				loaders: [
-					"style-loader",
-					"css-loader",
-					"less-loader"
-				]
-			}
 		],
 	},
+	plugins: [
+		new ExtractTextPlugin({
+			filename: "styles.css"
+		})
+	]
 };

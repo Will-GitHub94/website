@@ -27,9 +27,9 @@ module.exports = {
 	},
 
 	module: {
-		loaders: [
+		rules: [
 			{
-				test: /\.js$/,
+				test: /\.(js|jsx)$/,
 				exclude: /node_modules/,
 				loader: "babel-loader",
 				query: {
@@ -57,15 +57,6 @@ module.exports = {
 				options: {
 					limit: 8192
 				}
-			},
-			{
-				test: /\.less$/,
-				exclude: /node_modules/,
-				loaders: [
-					"style-loader",
-					"css-loader",
-					"less-loader"
-				]
 			},
 		],
 	},
