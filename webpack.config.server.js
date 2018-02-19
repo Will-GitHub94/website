@@ -7,14 +7,11 @@ module.exports = {
 		path: `${__dirname}/dist/`,
 		filename: "server.bundle.js",
 	},
-
 	target: "node",
-
 	node: {
 		__filename: true,
 		__dirname: true,
 	},
-
 	resolve: {
 		extensions: [
 			".js",
@@ -27,7 +24,7 @@ module.exports = {
 	},
 
 	module: {
-		rules: [
+		loaders: [
 			{
 				test: /\.(js|jsx)$/,
 				exclude: /node_modules/,
@@ -55,8 +52,13 @@ module.exports = {
 				test: /\.(png|jpg|gif)$/,
 				loader: "url-loader",
 				options: {
-					limit: 8192
+					limit: 8192,
+					emit: false
 				}
+			},
+			{
+				test: /\.css$/,
+				loader: "css-loader/locals"
 			},
 		],
 	},

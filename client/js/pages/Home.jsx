@@ -3,6 +3,8 @@ import React from "react";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 
+import "../../styles/Main.scss";
+
 export default class Home extends React.Component {
 	constructor() {
 		super();
@@ -26,7 +28,7 @@ export default class Home extends React.Component {
             <div>
                 <Header pageName={this.state.pageName} />
                 <body>
-                    <p>{this.state.intro}</p>
+                    <p className="something">{this.state.intro}</p>
 				</body>
                 <Footer />
 			</div>

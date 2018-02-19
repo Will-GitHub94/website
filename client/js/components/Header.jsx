@@ -2,7 +2,8 @@ import React from "react";
 
 import Links from "./Links.jsx";
 import profilePic from "../../img/brand/profilePic.jpg";
-import styles from "../../../dist/styles.css";
+
+require("../../styles/Main.scss");
 
 export default class Header extends React.Component {
 	constructor() {
@@ -14,12 +15,9 @@ export default class Header extends React.Component {
 		};
 	}
 
-	// On refresh, this is not updated as it is just passing a prop to title but is not updating itself...
-	// The 'value' property on the input ensures 2-way data binding
-
 	render() {
 		return (
-			<header className={styles.header}>
+			<header className="header">
 				<img src={profilePic} alt="Professional Picture"/>
 				<h1>{this.state.author}</h1>
 				<h3>{this.state.role}</h3>

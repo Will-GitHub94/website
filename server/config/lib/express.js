@@ -4,7 +4,7 @@
 import bodyParser from "body-parser";
 import session from "express-session";
 import connectMongo from "connect-mongo";
-import compress from "compression";
+import compression from "compression";
 import methodOverride from "method-override";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
@@ -75,7 +75,7 @@ const initWebpackMiddleware = (app) => {
 };
 
 const initCompressionMiddleware = (app) => {
-	app.use(compress({
+	app.use(compression({
 		filter(req, res) {
 			return (/json|text|javascript|css|font|svg/).test(res.getHeader("Content-Type"));
 		},
@@ -201,11 +201,22 @@ const initServerSideRendering = (app) => {
 	app.use((req, res, next) => {
 		const context = {};
 
-		const html = ReactDOMServer.renderToString(
-			<StaticRouter location={req.url} context={context}>
-				<App />
-			</StaticRouter>);
-		res.status(200).send(html);
+		const html = ReactDOMServer.renderToString(<StaticRouter location={req.url} context={context}>
+			<App />
+		</StaticRouter>);
+
+		res.status(200).send(`
+                <!DOCTYPE html>
+                <html>
+                	<head>
+                		<title>Will Ashworth</title>
+                		<link rel="stylesheet" type="text/css" href="/app.css"/>
+                	</head>
+                	<body>
+                		<div id="app">${html}</div>
+                	</body>
+                </html>
+        `);
 	});
 };
 
@@ -258,6 +269,10 @@ const configureSocketIO = (app, db) => {
 	return server;
 };
 
+const initServeStaticFiles = (app) => {
+	app.use(express.static(path.resolve(__dirname, "../dist/client")));
+};
+
 /**
  * Initialize the Express application
  */
@@ -294,6 +309,8 @@ const init = (db) => {
 
 	// Initialize error routes
 	initErrorRoutes(app);
+
+	initServeStaticFiles(app);
 
 	// Configure Socket.io
 	app = configureSocketIO(app, db);

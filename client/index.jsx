@@ -5,10 +5,8 @@ import ReactDOM from "react-dom";
 import App from "./App";
 
 ReactDOM.render(
-	<AppContainer>
-		<BrowserRouter>
-			<App/>
-		</BrowserRouter>
-	</AppContainer>,
+	<BrowserRouter>
+		<App/>
+	</BrowserRouter>,
 	document.getElementById("app")
 );

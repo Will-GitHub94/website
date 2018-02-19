@@ -10,16 +10,14 @@ module.exports = {
 			"webpack/hot/only-dev-server",
 			"react-hot-loader/patch",
 			"./client/index.jsx",
-			"./client/styles/Main.scss"
 		],
 		vendor: [
 			"react",
 			"react-dom",
 		],
 	},
-	target: "node",
 	output: {
-		path: `${__dirname}/dist/`,
+		path: `${__dirname}/dist/client`,
 		filename: "app.min.js",
 		publicPath: "http://0.0.0.0:8000/"
 	},
@@ -36,7 +34,7 @@ module.exports = {
 		nodeExternals()
 	],
 	module: {
-		rules: [
+		loaders: [
 			{
 				test: /\.jsx*$/,
 				exclude: /node_modules/,
@@ -55,7 +53,10 @@ module.exports = {
 			{
 				test: /\.scss$/,
 				exclude: /node_modules/,
+				// This loader will extract text from a bundle into a separate file (the clue is in the name)
 				loader: ExtractTextPlugin.extract({
+					// This will inject a '<style>' element into the DOM (not the virtual DOM) and will, therefore,
+					// be omitted if doing server-side rendering
 					fallback: "style-loader",
 					use: [
 						"css-loader",
@@ -86,8 +87,11 @@ module.exports = {
 				BROWSER: JSON.stringify(true)
 			}
 		}),
+		// This will bundle the stylesheets into this file
+		// In this case, 'styles.css'
 		new ExtractTextPlugin({
-			filename: "styles.css"
+			filename: "[name].css",
+			disable: process.env.NODE_ENV === "development"
 		}),
 	]
 };
