@@ -1,8 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import "../../styles/Main.scss";
-
 export default class Links extends React.Component {
 	constructor() {
 		super();

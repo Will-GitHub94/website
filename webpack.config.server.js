@@ -57,15 +57,9 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.css$/,
-				loader: "css-loader/locals"
+				test: /\.scss$/,
+				loader: 'style-loader!css-loader/locals?module&localIdentName=[name]__[local]___[hash:base64:5]!sass-loader',
 			},
 		],
 	},
-	plugins: [
-		new ExternalsPlugin({
-			type: "commonjs",
-			include: `${__dirname}/node_modules/`,
-		}),
-	],
 };

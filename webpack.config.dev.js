@@ -3,6 +3,7 @@ const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
+	devtool: "cheap-module-eval-source-map",
 	entry: {
 		app: [
 			"eventsource-polyfill",
@@ -52,24 +53,8 @@ module.exports = {
 			},
 			{
 				test: /\.scss$/,
-				exclude: /node_modules/,
-				// This loader will extract text from a bundle into a separate file (the clue is in the name)
-				loader: ExtractTextPlugin.extract({
-					// This will inject a '<style>' element into the DOM (not the virtual DOM) and will, therefore,
-					// be omitted if doing server-side rendering
-					fallback: "style-loader",
-					use: [
-						"css-loader",
-						"sass-loader"
-					]
-				}),
-			},
-			{
-				test: /\.css$/,
-				loader: ExtractTextPlugin.extract({
-					fallback: "style-loader",
-					use: "css-loader"
-				})
+				loader: 'style-loader!css-loader?module&localIdentName=[name]__[local]___[hash:base64:5]!sass-loader',
+				exclude: /node_modules/
 			},
 		],
 	},
@@ -86,12 +71,6 @@ module.exports = {
 				NODE_ENV: JSON.stringify("development"),
 				BROWSER: JSON.stringify(true)
 			}
-		}),
-		// This will bundle the stylesheets into this file
-		// In this case, 'styles.css'
-		new ExtractTextPlugin({
-			filename: "[name].css",
-			disable: process.env.NODE_ENV === "development"
 		}),
 	]
 };

@@ -210,7 +210,7 @@ const initServerSideRendering = (app) => {
                 <html>
                 	<head>
                 		<title>Will Ashworth</title>
-                		<link rel="stylesheet" type="text/css" href="/app.css"/>
+                		<link rel="stylesheet"href="/app.css" type="text/css"/>
                 	</head>
                 	<body>
                 		<div id="app">${html}</div>

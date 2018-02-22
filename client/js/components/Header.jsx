@@ -3,8 +3,6 @@ import React from "react";
 import Links from "./Links.jsx";
 import profilePic from "../../img/brand/profilePic.jpg";
 
-require("../../styles/Main.scss");
-
 export default class Header extends React.Component {
 	constructor() {
 		super();
